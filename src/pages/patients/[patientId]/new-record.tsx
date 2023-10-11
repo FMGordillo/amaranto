@@ -16,7 +16,7 @@ export default function CreateRecord() {
 
   const { data: session } = useSession();
 
-  const patient = (patientData || [])[0]
+  const patient = (patientData ?? [])[0]
 
   if (!session) {
     return <span>Access denied</span>;
@@ -30,7 +30,7 @@ export default function CreateRecord() {
     invariant(message, "Message should be defined")
     invariant(typeof params.patientId === 'string', "patientId should be a string")
 
-    await createRecord({
+    void await createRecord({
       message: message.toString(),
       patientId: params?.patientId,
     });
@@ -50,7 +50,7 @@ export default function CreateRecord() {
         <div className="container mx-auto mt-4 rounded-lg bg-white p-4 shadow">
           <h2 className="mb-4 mt-8 text-2xl font-semibold">{patient?.name}</h2>
 
-          <form aria-disabled={isLoading} onSubmit={handleSubmit}>
+          <form aria-disabled={isLoading} onSubmit={void handleSubmit}>
             <div className="mb-4">
               <label htmlFor="recordDescription" className="block text-gray-600 text-sm font-medium mb-2">Record Description</label>
               <textarea id="recordDescription" name="message" className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-primary-color" rows={4} required></textarea>
