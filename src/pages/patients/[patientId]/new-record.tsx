@@ -2,7 +2,7 @@ import invariant from 'tiny-invariant';
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useParams, useRouter } from "next/navigation";
-import { FormEvent, FormEventHandler } from "react";
+import { EventHandler, FormEvent } from "react";
 import Header from "~/components/Header";
 import { api } from "~/utils/api";
 
@@ -22,21 +22,24 @@ export default function CreateRecord() {
     return <span>Access denied</span>;
   }
 
-  const handleSubmit: FormEventHandler = async (e) => {
-    e.preventDefault();
-    const data = new FormData(e.currentTarget as HTMLFormElement);
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    try {
+      e.preventDefault();
+      const data = new FormData(e.currentTarget as HTMLFormElement);
 
-    const message = data.get('message')
-    invariant(message, "Message should be defined")
-    invariant(typeof params.patientId === 'string', "patientId should be a string")
+      const message = data.get('message')
+      invariant(message, "Message should be defined")
+      invariant(typeof params.patientId === 'string', "patientId should be a string")
 
-    void await createRecord({
-      message: message.toString(),
-      patientId: params?.patientId,
-    });
+      await createRecord({
+        message: message.toString(),
+        patientId: params?.patientId,
+      });
 
-    navigator.push("/patients");
-
+      navigator.push("/patients");
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
