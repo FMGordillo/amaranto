@@ -21,8 +21,12 @@ export default function Patients() {
       </Head>
       <div className="h-screen bg-gray-100">
         <Header />
+
         <div className="container mx-auto mt-4 rounded-lg bg-white p-4 shadow">
           <h2 className="mb-4 mt-8 text-2xl font-semibold">Patient List</h2>
+          <Link href="/patients/new-patient">
+            <button>Create patient</button>
+          </Link>
           <table className="min-w-full divide-y divide-gray-200">
             <thead>
               <tr>

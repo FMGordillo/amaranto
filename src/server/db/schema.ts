@@ -36,9 +36,9 @@ export const patients = sqliteTable(
   "patients",
   {
     id: text("id").$defaultFn(() => createId()).primaryKey(),
-    name: text("name", { length: 256 }),
+    name: text("name", { length: 256 }).notNull(),
     // I think we don't need any more info from the patient
-    doctorId: text("doctor_id"),
+    doctorId: text("doctor_id").notNull(),
     createdAt: text("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
