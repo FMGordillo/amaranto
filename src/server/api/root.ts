@@ -1,5 +1,6 @@
-import { patientsRouter } from "~/server/api/routers/example";
+import { patientsRouter } from "~/server/api/routers/patients";
 import { createTRPCRouter } from "~/server/api/trpc";
+import { clinicalRecordsRouter } from "./routers/clinicalRecords";
 
 /**
  * This is the primary router for your server.
@@ -7,7 +8,8 @@ import { createTRPCRouter } from "~/server/api/trpc";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  example: patientsRouter,
+  clinicalRecords: clinicalRecordsRouter,
+  patients: patientsRouter,
 });
 
 // export type definition of API

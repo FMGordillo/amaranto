@@ -2,7 +2,7 @@ import { relations, sql } from "drizzle-orm";
 import { createId } from '@paralleldrive/cuid2';
 import {
   index,
-  int,
+  integer,
   primaryKey,
   sqliteTableCreator,
   text,
@@ -57,7 +57,7 @@ export const patientsRelations = relations(patients, ({ many, one }) => ({
 }));
 
 export const users = sqliteTable("user", {
-  id: text("id", { length: 255 }).notNull().primaryKey(),
+  id: text("id", { length: 255 }).$defaultFn(() => createId()).notNull().primaryKey(),
   name: text("name", { length: 255 }),
   email: text("email", { length: 255 }).notNull(),
   // TODO: Add role as a type
@@ -88,7 +88,7 @@ export const accounts = sqliteTable(
     providerAccountId: text("providerAccountId", { length: 255 }).notNull(),
     refresh_token: text("refresh_token"),
     access_token: text("access_token"),
-    expires_at: int("expires_at"),
+    expires_at: integer("expires_at"),
     token_type: text("token_type", { length: 255 }),
     scope: text("scope", { length: 255 }),
     id_token: text("id_token"),
@@ -107,12 +107,11 @@ export const accountsRelations = relations(accounts, ({ one }) => ({
 export const sessions = sqliteTable(
   "session",
   {
-    sessionToken: text("sessionToken", { length: 255 })
+    sessionToken: text("sessionToken")
       .notNull()
       .primaryKey(),
-    userId: text("userId", { length: 255 }).notNull(),
-    expires: text("expires").notNull(),
-    // expires: text("expires", { mode: "date" }).notNull(),
+    userId: text("userId").notNull(),
+    expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
   },
   (session) => ({
     sesionIdIdx: index("sessionId_idx").on(session.userId),
@@ -127,9 +126,8 @@ export const verificationTokens = sqliteTable(
   "verificationToken",
   {
     identifier: text("identifier", { length: 255 }).notNull(),
-    token: text("token", { length: 255 }).notNull(),
-    expires: text("expires").notNull(),
-    // expires: text("expires", { mode: "date" }).notNull(),
+    token: text("token").notNull(),
+    expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
   },
   (vt) => ({
     compoundKey: primaryKey(vt.identifier, vt.token),
