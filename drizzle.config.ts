@@ -6,6 +6,7 @@ export default {
   driver: "turso",
   dbCredentials: {
     url: env.DATABASE_URL,
+    authToken: env.DATABASE_AUTH_TOKEN,
   },
   tablesFilter: ["amaranto_*"],
 } satisfies Config;
