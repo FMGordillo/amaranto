@@ -53,7 +53,7 @@ export default function Patients() {
               patients.data.map((patient) => (
                 <tr key={patient.id}>
                   <Link href={`/patients/${patient.id}/records`}>
-                    <td className="whitespace-nowrap px-6 py-4">
+                    <td className="whitespace-nowrap px-6 py-4 hover:underline underline-offset-4 transition-all">
                       {patient.name}
                     </td>
                   </Link>
@@ -67,12 +67,14 @@ export default function Patients() {
                       >
                         Create Record
                       </button>
+                      {/*
                       <button className="text-yellow-600 hover:text-yellow-900">
                         Edit
                       </button>
                       <button className="text-red-600 hover:text-red-900">
                         Remove
                       </button>
+                      */}
                     </div>
                   </td>
                 </tr>

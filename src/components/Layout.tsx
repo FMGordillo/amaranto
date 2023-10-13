@@ -18,6 +18,11 @@ const Layout: FunctionComponent<Props> = ({ children, title }) => {
         <Header />
         {children}
       </div>
+      <footer className="text-white bg-fuchsia-950 py-8">
+        <div className="container mx-auto">
+          <p>Made by ChiroTech</p>
+        </div>
+      </footer>
     </>
   );
 };
