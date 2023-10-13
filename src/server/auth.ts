@@ -1,15 +1,18 @@
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import { eq } from "drizzle-orm";
 import { type GetServerSidePropsContext } from "next";
 import {
   getServerSession,
   type DefaultSession,
   type NextAuthOptions,
+  User,
 } from "next-auth";
-import DiscordProvider from "next-auth/providers/discord";
+// import DiscordProvider from "next-auth/providers/discord";
+import CredentialsProvider from "next-auth/providers/credentials";
 
-import { env } from "~/env.mjs";
+// import { env } from "~/env.mjs";
 import { db } from "~/server/db";
-import { sqliteTable } from "~/server/db/schema";
+import { sessions, sqliteTable, users } from "~/server/db/schema";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -38,21 +41,49 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authOptions: NextAuthOptions = {
+  debug: true,
   callbacks: {
-    session: ({ session, user }) => ({
-      maxAge: 30 * 24 * 60 * 60,
-      expires: "" + session.expires,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    jwt({ token, user, account, profile, isNewUser }) {
+      // console.log({ token, account });
+      // if (account) {
+      // }
+      // await db.insert(sessions).values({
+      //   userId: user.id,
+      //   expires: new Date(),
+      //   sessionToken: token.accessToken as string,
+      // })
+      console.log({ token, user, account, profile, isNewUser });
+      token.accessToken = '1';
+      return token;
+    },
+    session: ({ session, token, user }) => {
+      console.log({ session, token, user });
+      return {
+        expires: session.expires,
+        user: {
+          ...session.user,
+          id: '842fee57-af7f-4548-a53b-0e5fb6120380',
+        },
+      }
+    },
   },
-  adapter: DrizzleAdapter(db, sqliteTable),
+  // adapter: DrizzleAdapter(db, sqliteTable),
   providers: [
-    DiscordProvider({
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
+    // DiscordProvider({
+    //   clientId: env.DISCORD_CLIENT_ID,
+    //   clientSecret: env.DISCORD_CLIENT_SECRET,
+    // }),
+    CredentialsProvider({
+      name: 'Iniciá sesión',
+      credentials: {
+        username: { label: "Username", type: "text", placeholder: "jsmith" },
+        password: { label: "Password", type: "password" }
+      },
+      async authorize(_credentials, _req) {
+        const user = await db.select().from(users).where(eq(users.email, "me@facundogordillo.com")).get()
+        console.log({ user });
+        return user as User | null;
+      }
     }),
     /**
      * ...add more providers here.
@@ -70,6 +101,7 @@ export const authOptions: NextAuthOptions = {
  * Wrapper for `getServerSession` so that you don't need to import the `authOptions` in every file.
  *
  * @see https://next-auth.js.org/configuration/nextjs
+
  */
 export const getServerAuthSession = (ctx: {
   req: GetServerSidePropsContext["req"];
