@@ -8,7 +8,8 @@
     "db:studio": "dotenv drizzle-kit studio",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "postinstall": "pnpx dotenv-vault@latest pull"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^0.3.2",

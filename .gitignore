@@ -45,3 +45,8 @@ yarn-error.log*
 my.db
 
 .wakatime-project
+
+.env*
+.flaskenv*
+!.env.project
+!.env.vault
