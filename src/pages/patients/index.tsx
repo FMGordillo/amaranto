@@ -34,6 +34,19 @@ export default function Patients() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 bg-white">
+            {patients.isLoading && <tr className="animate-pulse">
+              <td className="whitespace-nowrap px-6 py-4">
+                <span className="inline-block h-6 w-28 bg-slate-500 rounded" />
+              </td>
+              <td className="whitespace-nowrap px-6 py-4">
+                <div className="flex space-x-4">
+
+                  <span className="inline-block h-6 w-28 bg-slate-500 rounded" />
+                  <span className="inline-block h-6 w-9 bg-slate-500 rounded" />
+                  <span className="inline-block h-6 w-16 bg-slate-500 rounded" />
+                </div>
+              </td>
+            </tr>}
             {!patients.isLoading &&
               patients.data &&
               patients.data.length > 0 &&
