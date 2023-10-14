@@ -7,13 +7,15 @@ export default function Header() {
   const { data: session } = useSession();
 
   return (
-    <nav className="bg-fuchsia-700 p-2 text-white">
+    <nav className="sticky top-0 z-10 bg-fuchsia-700 p-2 text-white">
       <div className="container mx-auto flex items-center justify-between">
         <h1 className="flex flex-col">
           <Link href="/">
             <span className="text-2xl font-bold">Amaranto</span>
           </Link>
-          <span className="text-neutral-200 text-sm select-none">by ChiroTech</span>
+          <span className="select-none text-sm text-neutral-200">
+            by ChiroTech
+          </span>
         </h1>
 
         {!session ? (
@@ -47,8 +49,9 @@ export default function Header() {
                     {({ active }) => (
                       <button
                         onClick={() => void signOut()}
-                        className={`${active ? "bg-pink-500 text-white" : "text-gray-900"
-                          } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        className={`${
+                          active ? "bg-pink-500 text-white" : "text-gray-900"
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                       >
                         Logout
                       </button>

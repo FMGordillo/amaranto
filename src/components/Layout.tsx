@@ -14,15 +14,15 @@ const Layout: FunctionComponent<Props> = ({ children, title }) => {
         <meta name="description" content="Tu clínica digital" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div>
+      <div className="grid min-h-screen grid-rows-[auto_1fr_auto]">
         <Header />
-        {children}
+        <main>{children}</main>
+        <footer className="bg-fuchsia-950 py-8 text-white">
+          <div className="container mx-auto">
+            <p>Made by ChiroTech</p>
+          </div>
+        </footer>
       </div>
-      <footer className="text-white bg-fuchsia-950 py-8">
-        <div className="container mx-auto">
-          <p>Made by ChiroTech</p>
-        </div>
-      </footer>
     </>
   );
 };

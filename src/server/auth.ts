@@ -53,7 +53,7 @@ export const authOptions: NextAuthOptions = {
       //   sessionToken: token.accessToken as string,
       // })
       console.log({ token, user, account, profile, isNewUser });
-      token.accessToken = '1';
+      token.accessToken = "1";
       return token;
     },
     session: ({ session, token, user }) => {
@@ -62,9 +62,9 @@ export const authOptions: NextAuthOptions = {
         expires: session.expires,
         user: {
           ...session.user,
-          id: '842fee57-af7f-4548-a53b-0e5fb6120380',
+          id: "842fee57-af7f-4548-a53b-0e5fb6120380",
         },
-      }
+      };
     },
   },
   // adapter: DrizzleAdapter(db, sqliteTable),
@@ -74,16 +74,20 @@ export const authOptions: NextAuthOptions = {
     //   clientSecret: env.DISCORD_CLIENT_SECRET,
     // }),
     CredentialsProvider({
-      name: 'Iniciá sesión',
+      name: "Iniciá sesión",
       credentials: {
         username: { label: "Username", type: "text", placeholder: "jsmith" },
-        password: { label: "Password", type: "password" }
+        password: { label: "Password", type: "password" },
       },
       async authorize(_credentials, _req) {
-        const user = await db.select().from(users).where(eq(users.email, "me@facundogordillo.com")).get()
+        const user = await db
+          .select()
+          .from(users)
+          .where(eq(users.email, "me@facundogordillo.com"))
+          .get();
         console.log({ user });
         return user as User | null;
-      }
+      },
     }),
     /**
      * ...add more providers here.

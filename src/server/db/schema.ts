@@ -40,25 +40,22 @@ export const clinicalRecordsRelations = relations(
   }),
 );
 
-export const patients = sqliteTable(
-  "patients",
-  {
-    id: text("id")
-      .$defaultFn(() => createId())
-      .primaryKey(),
-    name: text("name", { length: 256 }).notNull(),
-    // I think we don't need any more info from the patient
-    doctorId: text("doctor_id")
-      .references(() => users.id, { onDelete: "restrict" })
-      .notNull(),
-    createdAt: text("created_at")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: text("updated_at")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-  },
-);
+export const patients = sqliteTable("patients", {
+  id: text("id")
+    .$defaultFn(() => createId())
+    .primaryKey(),
+  name: text("name", { length: 256 }).notNull(),
+  // I think we don't need any more info from the patient
+  doctorId: text("doctor_id")
+    .references(() => users.id, { onDelete: "restrict" })
+    .notNull(),
+  createdAt: text("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: text("updated_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+});
 
 // export const patientsRelations = relations(patients, ({ many, one }) => ({
 //   clinicalRecords: many(clinicalRecords),
@@ -102,16 +99,13 @@ export const accounts = sqliteTable(
   }),
 );
 
-export const sessions = sqliteTable(
-  "session",
-  {
-    sessionToken: text("sessionToken").notNull().primaryKey(),
-    userId: text("userId")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
-  },
-);
+export const sessions = sqliteTable("session", {
+  sessionToken: text("sessionToken").notNull().primaryKey(),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+});
 
 export const verificationTokens = sqliteTable(
   "verificationToken",

@@ -3,5 +3,5 @@
 @tailwind utilities;
 
 :root {
-  background: theme('colors.gray.100');
+  background: theme("colors.gray.100");
 }

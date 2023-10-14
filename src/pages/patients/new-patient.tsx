@@ -3,14 +3,19 @@ import invariant from "tiny-invariant";
 import type { FormEvent } from "react";
 import { api } from "~/utils/api";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
+import type {
+  GetServerSideProps,
+  InferGetServerSidePropsType,
+  NextPage,
+} from "next";
 
-export default function CreateRecord() {
+const CreateRecord: NextPage<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = ({ session }) => {
   const navigator = useRouter();
   const { isLoading, mutateAsync: createPatient } =
     api.patients.createPatient.useMutation();
-
-  const { data: session } = useSession();
 
   if (!session) {
     return <span>Access denied</span>;
@@ -62,4 +67,23 @@ export default function CreateRecord() {
       </div>
     </Layout>
   );
-}
+};
+
+export default CreateRecord;
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session },
+  };
+};

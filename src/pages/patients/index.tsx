@@ -2,10 +2,16 @@ import Layout from "~/components/Layout";
 import Link from "next/link";
 import { api } from "~/utils/api";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
+import {
+  GetServerSideProps,
+  InferGetServerSidePropsType,
+  NextPage,
+} from "next";
 
-export default function Patients() {
-  const { data: session } = useSession();
+const Patients: NextPage<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = ({ session }) => {
   const navigate = useRouter();
   const patients = api.patients.getPatients.useQuery();
 
@@ -16,10 +22,12 @@ export default function Patients() {
   return (
     <Layout title="Pacientes - Amaranto">
       <div className="container mx-auto mt-4 rounded-lg bg-white p-4 shadow">
-        <div className="flex justify-between items-center my-8">
+        <div className="my-8 flex items-center justify-between">
           <h2 className="mb-4 text-2xl font-semibold">Patient List</h2>
           <Link href="/patients/new-patient">
-            <button className="bg-fuchsia-700 text-white px-4 py-2 rounded-lg hover:bg-pink-600">Create patient</button>
+            <button className="rounded-lg bg-fuchsia-700 px-4 py-2 text-white hover:bg-pink-600">
+              Create patient
+            </button>
           </Link>
         </div>
         <table className="min-w-full divide-y divide-gray-200">
@@ -34,26 +42,27 @@ export default function Patients() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 bg-white">
-            {patients.isLoading && <tr className="animate-pulse">
-              <td className="whitespace-nowrap px-6 py-4">
-                <span className="inline-block h-6 w-28 bg-slate-500 rounded" />
-              </td>
-              <td className="whitespace-nowrap px-6 py-4">
-                <div className="flex space-x-4">
-
-                  <span className="inline-block h-6 w-28 bg-slate-500 rounded" />
-                  <span className="inline-block h-6 w-9 bg-slate-500 rounded" />
-                  <span className="inline-block h-6 w-16 bg-slate-500 rounded" />
-                </div>
-              </td>
-            </tr>}
+            {patients.isLoading && (
+              <tr className="animate-pulse">
+                <td className="whitespace-nowrap px-6 py-4">
+                  <span className="inline-block h-6 w-28 rounded bg-slate-500" />
+                </td>
+                <td className="whitespace-nowrap px-6 py-4">
+                  <div className="flex space-x-4">
+                    <span className="inline-block h-6 w-28 rounded bg-slate-500" />
+                    <span className="inline-block h-6 w-9 rounded bg-slate-500" />
+                    <span className="inline-block h-6 w-16 rounded bg-slate-500" />
+                  </div>
+                </td>
+              </tr>
+            )}
             {!patients.isLoading &&
               patients.data &&
               patients.data.length > 0 &&
               patients.data.map((patient) => (
                 <tr key={patient.id}>
                   <Link href={`/patients/${patient.id}/records`}>
-                    <td className="whitespace-nowrap px-6 py-4 hover:underline underline-offset-4 transition-all">
+                    <td className="whitespace-nowrap px-6 py-4 underline-offset-4 transition-all hover:underline">
                       {patient.name}
                     </td>
                   </Link>
@@ -84,4 +93,23 @@ export default function Patients() {
       </div>
     </Layout>
   );
-}
+};
+
+export default Patients;
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session },
+  };
+};

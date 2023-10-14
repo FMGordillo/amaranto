@@ -18,7 +18,11 @@ export const patientsRouter = createTRPCRouter({
       .from(patients)
       .where(eq(patients.doctorId, ctx.session.user.id));
   }),
-  createPatient: protectedProcedure.input(z.string()).mutation(({ ctx, input }) => {
-    return ctx.db.insert(patients).values({ name: input, doctorId: ctx.session.user.id })
-  }),
+  createPatient: protectedProcedure
+    .input(z.string())
+    .mutation(({ ctx, input }) => {
+      return ctx.db
+        .insert(patients)
+        .values({ name: input, doctorId: ctx.session.user.id });
+    }),
 });
