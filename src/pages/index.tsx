@@ -2,14 +2,16 @@ import Layout from "~/components/Layout";
 import Link from "next/link";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import useTranslation from 'next-translate/useTranslation';
 
 export default function Home() {
   const router = useRouter();
   const { data: user, status } = useSession();
+  const { t } = useTranslation();
 
   // TODO: add a loading screen, or Suspense?
   if (status === "loading") {
-    return <span>loading...</span>;
+    return <span>{t('common:loading_message')}</span>;
   } else if (status === "authenticated") {
     void router.replace("/patients");
   } else {
@@ -31,21 +33,13 @@ export default function Home() {
                 <h1 className="flex flex-col">
                   <span className="text-6xl font-bold">Amaranto</span>
                   <span className="inline-block bg-gradient-to-r from-pink-600 to-purple-700 bg-clip-text py-1 text-5xl font-bold text-transparent">
-                    Tu clinica digital
+                    {t('home:header-subtitle')}
                   </span>
                 </h1>
               </div>
             </header>
 
-            <section className="mt-8 py-4">
-              <h1 className="text-center text-4xl font-bold">
-                Gestioná tus pacientes
-                <br />
-                <b className="underline">en un solo lugar</b>
-              </h1>
-            </section>
-
-            <section className="mt-8 flex flex-col items-center gap-4 bg-fuchsia-300 py-8">
+            <section className="mt-8 flex flex-col items-center gap-4 py-16">
               <h1 className="text-center text-4xl font-bold">Demo</h1>
               <video className="bg-gray-500">
                 <source />
@@ -54,12 +48,12 @@ export default function Home() {
 
             <section className="">
               <div className="container mx-auto p-10">
-                <h1 className="mb-8 p-4 text-4xl font-bold">Pricing</h1>
+                <h1 className="mb-8 p-4 text-4xl font-bold">{t('home:pricing.header')}</h1>
 
                 <div className="flex flex-col items-center justify-center gap-4 md:flex-row">
                   <div className="md:grid-cols[120px-auto-120px] grid max-w-sm gap-8 rounded-lg pb-8 shadow-lg ring-neutral-500 transition-all hover:ring md:w-1/3">
                     <div className="flex items-center rounded-lg rounded-b bg-neutral-400 py-4 pl-8">
-                      <h2 className="text-2xl font-semibold">Free</h2>
+                      <h2 className="text-2xl font-semibold">{t('home:pricing.free.header')}</h2>
                     </div>
                     <div className="px-8">
                       <ul className="mt-4 flex list-inside flex-col gap-2">

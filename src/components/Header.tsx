@@ -1,10 +1,12 @@
 import { Menu, Transition } from "@headlessui/react";
 import { signIn, signOut, useSession } from "next-auth/react";
+import useTranslation from "next-translate/useTranslation";
 import Link from "next/link";
-import { Fragment, useEffect } from "react";
+import { Fragment } from "react";
 
 export default function Header() {
   const { data: session } = useSession();
+  const { t } = useTranslation();
 
   return (
     <nav className="sticky top-0 z-10 bg-fuchsia-700 p-2 text-white">
@@ -24,14 +26,14 @@ export default function Header() {
               className="inline-flex w-full justify-center rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
               onClick={() => void signIn()}
             >
-              Login
+              {t('common:sign_in')}
             </button>
           </div>
         ) : (
           <Menu as="div" className="relative inline-block text-left">
             <div>
               <Menu.Button className="inline-flex w-full justify-center rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-                {session ? `Hello, ${session.user.name}` : "Sign in"}
+                {session ? `Hello, ${session.user.name}` : t('common:sign_in')}
               </Menu.Button>
             </div>
             <Transition
@@ -49,11 +51,10 @@ export default function Header() {
                     {({ active }) => (
                       <button
                         onClick={() => void signOut()}
-                        className={`${
-                          active ? "bg-pink-500 text-white" : "text-gray-900"
-                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        className={`${active ? "bg-pink-500 text-white" : "text-gray-900"
+                          } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                       >
-                        Logout
+                        {t('common:sign_out')}
                       </button>
                     )}
                   </Menu.Item>
