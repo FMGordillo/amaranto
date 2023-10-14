@@ -5,11 +5,12 @@ import { useRouter } from "next/router";
 
 export default function Home() {
   const router = useRouter();
-  const { data: user, status } = useSession({ required: true });
+  const { data: user, status } = useSession();
 
   // TODO: add a loading screen, or Suspense?
-
-  if (status === "authenticated") {
+  if (status === "loading") {
+    return <span>loading...</span>;
+  } else if (status === "authenticated") {
     void router.replace("/patients");
   } else {
     return (
