@@ -1,5 +1,5 @@
 import invariant from "tiny-invariant";
-import { getSession, useSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
 import Head from "next/head";
 import { useParams, useRouter } from "next/navigation";
 import type { FormEvent } from "react";
@@ -13,7 +13,7 @@ import type {
 
 const CreateRecordPage: NextPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ session }) => {
+> = () => {
   const navigator = useRouter();
   const params = useParams();
   const { isLoading, mutateAsync: createRecord } =
@@ -24,10 +24,6 @@ const CreateRecordPage: NextPage<
   );
 
   const patient = (patientData ?? [])[0];
-
-  if (!session) {
-    return <span>Access denied</span>;
-  }
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     try {
@@ -98,9 +94,9 @@ const CreateRecordPage: NextPage<
 export default CreateRecordPage;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context);
+  const sessionData = await getSession(context);
 
-  if (!session) {
+  if (!sessionData) {
     return {
       redirect: {
         destination: "/",
@@ -110,6 +106,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   return {
-    props: { session },
+    props: { sessionData },
   };
 };

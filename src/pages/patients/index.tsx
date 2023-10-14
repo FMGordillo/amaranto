@@ -11,11 +11,12 @@ import {
 
 const Patients: NextPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ session }) => {
+> = ({ sessionData }) => {
+
   const navigate = useRouter();
   const patients = api.patients.getPatients.useQuery();
 
-  if (!session) {
+  if (!sessionData) {
     return <span>Access denied</span>;
   }
 
@@ -110,6 +111,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   return {
-    props: { session },
+    props: { sessionData: session }
   };
 };

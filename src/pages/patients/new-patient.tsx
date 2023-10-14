@@ -12,12 +12,12 @@ import type {
 
 const CreateRecord: NextPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ session }) => {
+> = ({ sessionData }) => {
   const navigator = useRouter();
   const { isLoading, mutateAsync: createPatient } =
     api.patients.createPatient.useMutation();
 
-  if (!session) {
+  if (!sessionData) {
     return <span>Access denied</span>;
   }
 
@@ -72,9 +72,9 @@ const CreateRecord: NextPage<
 export default CreateRecord;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context);
+  const sessionData = await getSession(context);
 
-  if (!session) {
+  if (!sessionData) {
     return {
       redirect: {
         destination: "/",
@@ -84,6 +84,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   return {
-    props: { session },
+    props: { sessionData },
   };
 };
