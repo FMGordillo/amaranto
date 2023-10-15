@@ -46,7 +46,7 @@ export default function PatientsList({
   };
 
   return (
-    <div className="max-h-96 overflow-y-scroll">
+    <div className="overflow-y-auto">
       <table className="w-full divide-y divide-gray-200">
         <thead>
           <tr>

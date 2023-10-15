@@ -22,7 +22,7 @@ export default function ClinicalRecords({ patientId }: ClinicalRecordsProps) {
     return (
       <div className="relative flex h-full items-center justify-center rounded-md px-8">
         <h1 className="z-10">Select a patient</h1>
-        <div className="absolute inset-0 bg-pink-100 blur" />
+        <div className="absolute inset-0 bg-pink-50 blur" />
       </div>
     );
 
