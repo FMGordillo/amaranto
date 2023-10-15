@@ -100,7 +100,7 @@ export default function PatientsList({
                       </button>
                     </form>
                   ) : (
-                    <span>{patient?.name}</span>
+                    <span className="select-none">{patient?.name}</span>
                   )}
 
                   {patient?.id === patientId && !isEditMode && (
