@@ -27,7 +27,7 @@ export default function ClinicalRecords({ patientId }: ClinicalRecordsProps) {
     );
 
   return (
-    <div>
+    <div className="max-h-full overflow-y-auto">
       <button
         className="flex items-center gap-2 rounded-md border px-4 py-2"
         onClick={handleGoBack}
@@ -46,7 +46,12 @@ export default function ClinicalRecords({ patientId }: ClinicalRecordsProps) {
       </div>
       {records &&
         records?.length > 0 &&
-        records.map((record) => <div key={record.id}>{record.message}</div>)}
+        records.map((record) => (
+          <div key={record.id} className="mb-2 rounded-lg bg-gray-100 p-2">
+            <p className="text-sm">{new Date(record.createdAt).toLocaleDateString()}</p>
+            <p className="whitespace-pre-line">{record.message}</p>
+          </div>
+        ))}
 
       <CreateRecordModal
         open={newRecordModal}

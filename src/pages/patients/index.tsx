@@ -23,6 +23,7 @@ const Patients: NextPage<
   const { patientId } = router.query;
 
   const handlePatientClick = (patientId: string | undefined) => {
+    console.log('click')
     invariant(!!patientId, "patientId must be provided");
     void router.replace(`/patients?patientId=${patientId}`);
   };
@@ -41,7 +42,7 @@ const Patients: NextPage<
             </button>
           </div>
 
-          <div className="grid h-full grid-cols-1 md:grid-cols-2 gap-4 p-8 px-8">
+          <div className="grid max-h-full h-full grid-cols-1 md:grid-cols-2 gap-4 p-8 px-8">
             <PatientsList
               patients={patients.data}
               loading={patients.isLoading}

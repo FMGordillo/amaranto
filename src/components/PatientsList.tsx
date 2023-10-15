@@ -71,10 +71,10 @@ export default function PatientsList({
                 }
                 onClick={() => !isEditMode && handlePatientClick(patient?.id)}
               >
-                <td className="whitespace-nowrap px-6 py-4 underline-offset-4 transition-all">
+                <td className="flex justify-between whitespace-nowrap px-6 py-4 underline-offset-4 transition-all">
                   {isEditMode && patient?.id === patientId ? (
                     <form
-                      className="flex"
+                      className="flex gap-2"
                       aria-disabled={isLoading}
                       onSubmit={(e) => void handleEdit(e)}
                     >
@@ -102,10 +102,8 @@ export default function PatientsList({
                   ) : (
                     <span>{patient?.name}</span>
                   )}
-                </td>
 
-                {patient?.id === patientId && !isEditMode && (
-                  <td className="whitespace-nowrap px-6 py-4">
+                  {patient?.id === patientId && !isEditMode && (
                     <div className="flex space-x-4">
                       <button
                         onClick={() => setIsEditMode(true)}
@@ -114,12 +112,12 @@ export default function PatientsList({
                         Editar paciente
                       </button>
                     </div>
-                  </td>
-                )}
+                  )}
+                </td>
               </tr>
             ))}
         </tbody>
       </table>
-    </div>
+    </div >
   );
 }
