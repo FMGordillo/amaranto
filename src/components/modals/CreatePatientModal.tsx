@@ -14,7 +14,7 @@ export default function CreatePatientModal({
   onClose,
   open,
 }: CreatePatientModalProps) {
-  const { isLoading, mutateAsync: createPatient } =
+  const { mutateAsync: createPatient } =
     api.patients.createPatient.useMutation();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {

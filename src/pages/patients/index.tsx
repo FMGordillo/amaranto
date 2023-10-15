@@ -40,11 +40,12 @@ const Patients: NextPage<
           </button>
         </div>
 
-        <div className="grid h-full max-h-full grid-cols-2 gap-4 p-8 px-8">
+        <div className="grid h-full max-h-full grid-cols-1 md:grid-cols-2 gap-4 p-8 px-8">
           <PatientsList
             patients={patients.data}
             loading={patients.isLoading}
             handlePatientClick={handlePatientClick}
+            onSubmit={patients.refetch}
           />
           <ClinicalRecords patientId={patientId as string | undefined} />
         </div>
