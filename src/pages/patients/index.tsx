@@ -23,35 +23,41 @@ const Patients: NextPage<
   const { patientId } = router.query;
 
   const handlePatientClick = (patientId: string | undefined) => {
-    console.log('click')
     invariant(!!patientId, "patientId must be provided");
     void router.replace(`/patients?patientId=${patientId}`);
   };
 
   return (
     <Layout title="Pacientes - Amaranto">
-      <div className="py-4 h-full">
+      <div className="h-full py-4">
         <div className="container mx-auto h-full rounded-lg bg-white p-8 shadow">
-          <div className="flex items-center justify-between">
+          <div className="relative z-10 flex items-center justify-between">
             <h2 className="mb-4 text-2xl font-semibold">Patient List</h2>
             <button
-              className="rounded-lg bg-fuchsia-700 px-4 py-2 text-white hover:bg-pink-600"
+              className="rounded-lg bg-fuchsia-700 px-4 py-2 text-white hover:cursor-pointer hover:bg-pink-600"
               onClick={() => setNewPatientModal(true)}
             >
               Create patient
             </button>
           </div>
 
-          <div className="grid max-h-full h-full grid-cols-1 md:grid-cols-2 gap-4 p-8 px-8">
-            <PatientsList
-              patients={patients.data}
-              loading={patients.isLoading}
-              handlePatientClick={handlePatientClick}
-              onSubmit={patients.refetch}
-            />
-            <ClinicalRecords patientId={patientId as string | undefined} />
-          </div>
+          {patients.data?.length === 0 ? (
 
+            <div className="isolate relative flex h-full items-center justify-center rounded-md -mt-8 px-8">
+              <h1 className="z-10">Create a patient</h1>
+              <div className="absolute inset-0 bg-pink-50 blur" />
+            </div>
+          ) : (
+            <div className="grid h-full max-h-full grid-cols-1 gap-4 p-8 px-8 md:grid-cols-2">
+              <PatientsList
+                patients={patients.data}
+                loading={patients.isLoading}
+                handlePatientClick={handlePatientClick}
+                onSubmit={patients.refetch}
+              />
+              <ClinicalRecords patientId={patientId as string | undefined} />
+            </div>
+          )}
           <CreatePatientModal
             open={newPatientModal}
             onClose={() => setNewPatientModal(false)}
@@ -59,7 +65,7 @@ const Patients: NextPage<
           />
         </div>
       </div>
-    </Layout>
+    </Layout >
   );
 };
 
