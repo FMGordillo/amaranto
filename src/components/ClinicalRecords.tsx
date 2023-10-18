@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { Transition } from "@headlessui/react";
 import invariant from "tiny-invariant";
+import Image from "next/image";
 
 type ClinicalRecordsProps = {
   patientId: string | undefined;
@@ -32,7 +33,7 @@ export default function ClinicalRecords({ patientId }: ClinicalRecordsProps) {
 
     if (page > data?.pages.length || page <= 0) return;
     router.query.page = page.toString();
-    router.replace(router);
+    void router.replace(router);
   };
 
   const handleBriefing = async () => {
@@ -75,7 +76,7 @@ export default function ClinicalRecords({ patientId }: ClinicalRecordsProps) {
             className="flex items-center gap-2 rounded-md border px-4 py-2"
             onClick={handleGoBack}
           >
-            <img src="/back.svg" className="w-6" />
+            <Image alt="back button" src="/back.svg" className="w-6" />
           </button>
           <h2 className="text-2xl font-semibold">Historia clinica</h2>
         </div>
