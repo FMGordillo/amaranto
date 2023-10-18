@@ -25,7 +25,7 @@ export default function Button({
 
   return (
     <button
-      className={`flex gap-2 items-center rounded-lg px-4 py-2 ${variantClass} ${className}`}
+      className={`flex gap-2 items-center rounded-lg px-4 py-2 select-none ${variantClass} ${className}`}
       {...props}
     >
       {loading && <img className="animate-spin w-6" src="/loading.svg" />}

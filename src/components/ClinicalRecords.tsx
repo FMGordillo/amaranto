@@ -3,8 +3,9 @@ import CreateRecordModal from "./modals/CreateRecordModal";
 import { api } from "~/utils/api";
 import { env } from "~/env.mjs";
 import { useRouter } from "next/router";
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import { Transition } from "@headlessui/react";
+import invariant from "tiny-invariant";
 
 type ClinicalRecordsProps = {
   patientId: string | undefined;
@@ -15,13 +16,23 @@ export default function ClinicalRecords({ patientId }: ClinicalRecordsProps) {
   const [newRecordModal, setNewRecordModal] = useState(false);
   const [summary, setSummary] = useState<string | undefined>();
 
-  const { data: records, refetch } = api.clinicalRecords.getByPatient.useQuery(
-    patientId!,
+  const page = parseInt(router.query.page as string) || 1;
+
+  const { data, refetch } = api.clinicalRecords.getByPatient.useQuery(
+    { patientId: patientId!, page },
     { enabled: !!patientId },
   );
 
   const handleGoBack = () => {
     void router.replace("/patients");
+  };
+
+  const handlePageChange = (page: number) => {
+    invariant(data?.pages, "pages should be defined");
+
+    if (page > data?.pages.length || page <= 0) return;
+    router.query.page = page.toString();
+    router.replace(router);
   };
 
   const handleBriefing = async () => {
@@ -34,12 +45,12 @@ export default function ClinicalRecords({ patientId }: ClinicalRecordsProps) {
       setLoadingBrief(true);
       const response = await fetch(url, {
         headers: {
-          'Content-Type': "application/json",
+          "Content-Type": "application/json",
         },
         method: "POST",
         body: JSON.stringify({ patientId }),
       });
-      const responseText = await response.text()
+      const responseText = await response.text();
       setSummary(responseText);
     } catch (error) {
       console.log(error);
@@ -58,15 +69,16 @@ export default function ClinicalRecords({ patientId }: ClinicalRecordsProps) {
 
   return (
     <div className="max-h-full overflow-y-auto">
-      <button
-        className="flex items-center gap-2 rounded-md border px-4 py-2"
-        onClick={handleGoBack}
-      >
-        <img src="/back.svg" className="w-6" />
-        <span>Back</span>
-      </button>
       <div className="my-8 flex items-center justify-between">
-        <h2 className="text-2xl font-semibold">Historia clinica</h2>
+        <div className="flex items-center gap-2">
+          <button
+            className="flex items-center gap-2 rounded-md border px-4 py-2"
+            onClick={handleGoBack}
+          >
+            <img src="/back.svg" className="w-6" />
+          </button>
+          <h2 className="text-2xl font-semibold">Historia clinica</h2>
+        </div>
         <button
           className="rounded-lg bg-fuchsia-700 px-4 py-2 text-white hover:bg-pink-600"
           onClick={() => setNewRecordModal(true)}
@@ -75,9 +87,9 @@ export default function ClinicalRecords({ patientId }: ClinicalRecordsProps) {
         </button>
       </div>
 
-      {patientId && records && records?.length > 0 && (
+      {patientId && data?.records && data.records?.length > 0 ? (
         <>
-          {records.length > 10 && (
+          {data.totalRecords > 10 ? (
             <Button
               loading={loadingBrief}
               aria-disabled={loadingBrief}
@@ -87,6 +99,10 @@ export default function ClinicalRecords({ patientId }: ClinicalRecordsProps) {
             >
               Generate briefing
             </Button>
+          ) : (
+            <blockquote className="mb-8 text-center text-neutral-700">
+              After the 10th record, AI will be enabled to you
+            </blockquote>
           )}
 
           <Transition
@@ -119,15 +135,52 @@ export default function ClinicalRecords({ patientId }: ClinicalRecordsProps) {
             </blockquote>
           </Transition>
 
-          {records.map((record) => (
-            <div key={record.id} className="mb-2 rounded-lg bg-gray-100 p-2">
-              <p className="text-sm">
+          {data.records.map((record) => (
+            <div
+              key={record.id}
+              className="mb-2 rounded-lg bg-gray-100 px-4 py-2"
+            >
+              <p className="text-right text-sm">
                 {new Date(record.createdAt).toLocaleDateString()}
               </p>
               <p className="whitespace-pre-line">{record.message}</p>
             </div>
           ))}
+
+          {data.visiblePages.length > 0 && (
+            <div className="flex justify-center gap-2">
+              <Button
+                className={!data.hasPreviousPage ? "bg-neutral-400" : ""}
+                aria-disabled={!data.hasPreviousPage}
+                onClick={() => handlePageChange(page - 1)}
+              >
+                {"<"}
+              </Button>
+
+              {data.visiblePages.map((currentPage) => (
+                <Button
+                  className={currentPage === page ? "bg-pink-500" : ""}
+                  onClick={() => handlePageChange(currentPage)}
+                  key={currentPage}
+                >
+                  {currentPage}
+                </Button>
+              ))}
+
+              <Button
+                aria-disabled={!data.hasNextPage}
+                className={!data.hasNextPage ? "bg-neutral-400" : ""}
+                onClick={() => handlePageChange(page + 1)}
+              >
+                {">"}
+              </Button>
+            </div>
+          )}
         </>
+      ) : (
+        <blockquote className="text-center text-neutral-700">
+          No registers found for the user
+        </blockquote>
       )}
 
       <CreateRecordModal
