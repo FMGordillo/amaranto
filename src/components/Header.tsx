@@ -1,7 +1,7 @@
 import { Menu, Transition } from "@headlessui/react";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
-import { Fragment, useEffect } from "react";
+import { Fragment } from "react";
 
 export default function Header() {
   const { data: session } = useSession();
@@ -9,23 +9,26 @@ export default function Header() {
   return (
     <nav className="sticky top-0 z-10 bg-fuchsia-700 p-2 text-white">
       <div className="container mx-auto flex items-center justify-between">
-        <h1 className="flex flex-col">
+        <h1 className="flex flex-col select-none">
           <Link href="/">
             <span className="text-2xl font-bold">Amaranto</span>
           </Link>
-          <span className="select-none text-sm text-neutral-200">
+          <span className="text-sm text-neutral-200">
             by ChiroTech
           </span>
         </h1>
 
         {!session ? (
           <div>
-            <button
-              className="inline-flex w-full justify-center rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
-              onClick={() => void signIn()}
+            <a
+              className="inline-flex w-full justify-center rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 motion-safe:animate-pulse"
+              // onClick={() => void signIn()}
+              href="https://share-eu1.hsforms.com/1QL5wqKPmRj2mNUIpLrEItg2dasdu"
+              target="_blank"
+              rel="noreferrer noopener"
             >
-              Login
-            </button>
+              Registrate a la beta 📝
+            </a>
           </div>
         ) : (
           <Menu as="div" className="relative inline-block text-left">
@@ -49,9 +52,8 @@ export default function Header() {
                     {({ active }) => (
                       <button
                         onClick={() => void signOut()}
-                        className={`${
-                          active ? "bg-pink-500 text-white" : "text-gray-900"
-                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        className={`${active ? "bg-pink-500 text-white" : "text-gray-900"
+                          } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                       >
                         Logout
                       </button>

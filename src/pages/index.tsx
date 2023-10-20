@@ -25,27 +25,24 @@ export default function Home() {
         ) : (
           <div>
             <header className="relative isolate flex h-96 items-center">
-              <div className="absolute inset-0 bg-[url('/doctor_and_patient_laptop.jpg')] bg-cover blur-sm" />
-              <div className="absolute inset-0 bg-pink-300 opacity-75" />
+              <div className="absolute inset-0 bg-[url('/background.png')] bg-cover" />
               <div className="container z-10 mx-auto pl-4 md:pl-8">
-                <h1 className="flex flex-col">
-                  <span className="text-6xl font-bold">Amaranto</span>
-                  <span className="inline-block bg-gradient-to-r from-pink-600 to-purple-700 bg-clip-text py-1 text-5xl font-bold text-transparent">
-                    Tu clinica digital
+                <h1 className="select-none">
+                  <span className="bg-neutral-950/50 px-4 text-6xl font-bold text-white">
+                    Amaranto
+                  </span>
+                  <br />
+                  <br />
+                  <span className="inline-block bg-neutral-950/50 px-4">
+                    <span className="inline-block bg-gradient-to-r from-pink-600 to-purple-400 bg-clip-text py-1 text-5xl font-bold text-transparent">
+                      Tu clinica digital
+                    </span>
                   </span>
                 </h1>
               </div>
             </header>
 
-            <section className="mt-8 py-4">
-              <h1 className="text-center text-4xl font-bold">
-                Gestioná tus pacientes
-                <br />
-                <b className="underline">en un solo lugar</b>
-              </h1>
-            </section>
-
-            <section className="mt-8 flex flex-col items-center gap-4 bg-fuchsia-300 py-8">
+            <section className="flex flex-col items-center gap-4 py-16">
               <h1 className="text-center text-4xl font-bold">Demo</h1>
               <video className="bg-gray-500">
                 <source />
