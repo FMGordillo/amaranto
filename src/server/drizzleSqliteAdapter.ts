@@ -71,7 +71,6 @@ export function SQLiteDrizzleAdapter(
     createTables(tableFn);
 
   return {
-    // @ts-ignore
     createUser(data) {
       return client
         .insert(users)
@@ -79,7 +78,6 @@ export function SQLiteDrizzleAdapter(
         .returning()
         .get();
     },
-    // @ts-ignore
     getUser(data) {
       return (
         client.select().from(users).where(eq(users.id, data)).get() ?? null
@@ -103,9 +101,6 @@ export function SQLiteDrizzleAdapter(
         .where(eq(sessions.sessionToken, data))
         .innerJoin(users, eq(users.id, sessions.userId))
         .get();
-
-      const haber = results.then(d => d)
-      console.log("getSessionAndUser", haber);
 
       if (!results) {
         return null;
@@ -175,7 +170,6 @@ export function SQLiteDrizzleAdapter(
 
       return Promise.resolve(results).then((results) => results.user);
     },
-    // @ts-ignore
     deleteSession(sessionToken) {
       return (
         client
@@ -185,11 +179,9 @@ export function SQLiteDrizzleAdapter(
           .get() ?? null
       );
     },
-    // @ts-ignore
     createVerificationToken(token) {
       return client.insert(verificationTokens).values(token).returning().get();
     },
-    // @ts-ignore
     useVerificationToken(token) {
       try {
         return (
@@ -208,7 +200,6 @@ export function SQLiteDrizzleAdapter(
         throw new Error("No verification token found.");
       }
     },
-    // @ts-ignore
     deleteUser(id) {
       return client.delete(users).where(eq(users.id, id)).returning().get();
     },
