@@ -76,7 +76,7 @@ export default function ClinicalRecords({ patientId }: ClinicalRecordsProps) {
             className="flex items-center gap-2 rounded-md border px-4 py-2"
             onClick={handleGoBack}
           >
-            <Image alt="back button" src="/back.svg" className="w-6" />
+            <Image alt="back button" width={120} height={120} src="/back.svg" className="w-6" />
           </button>
           <h2 className="text-2xl font-semibold">Historia clinica</h2>
         </div>

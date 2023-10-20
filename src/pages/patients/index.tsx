@@ -9,7 +9,7 @@ import type {
 import PatientsList from "~/components/PatientsList";
 import { useRouter } from "next/router";
 import ClinicalRecords from "~/components/ClinicalRecords";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CreatePatientModal from "~/components/modals/CreatePatientModal";
 import invariant from "tiny-invariant";
 
@@ -27,6 +27,14 @@ const Patients: NextPage<
     void router.replace(`/patients?patientId=${patientId}`);
   };
 
+  useEffect(() => {
+    const currentPatient = patients.data?.findIndex(
+      (patient) => patient.id === patientId,
+    );
+
+    if (currentPatient === -1) void router.replace("/patients");
+  }, [router, patients.data]);
+
   return (
     <Layout title="Pacientes - Amaranto">
       <div className="h-full py-4">
@@ -42,8 +50,7 @@ const Patients: NextPage<
           </div>
 
           {patients.data?.length === 0 ? (
-
-            <div className="isolate relative flex h-full items-center justify-center rounded-md -mt-8 px-8">
+            <div className="relative isolate -mt-8 flex h-full items-center justify-center rounded-md px-8">
               <h1 className="z-10">Create a patient</h1>
               <div className="absolute inset-0 bg-pink-50 blur" />
             </div>
@@ -65,7 +72,7 @@ const Patients: NextPage<
           />
         </div>
       </div>
-    </Layout >
+    </Layout>
   );
 };
 
