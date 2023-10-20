@@ -1,22 +1,22 @@
 import Layout from "~/components/Layout";
 import { api } from "~/utils/api";
-import { getSession } from "next-auth/react";
-import type {
-  GetServerSideProps,
-  InferGetServerSidePropsType,
-  NextPage,
-} from "next";
+import { useSession } from "next-auth/react";
 import PatientsList from "~/components/PatientsList";
 import { useRouter } from "next/router";
 import ClinicalRecords from "~/components/ClinicalRecords";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import CreatePatientModal from "~/components/modals/CreatePatientModal";
 import invariant from "tiny-invariant";
+import { Transition } from "@headlessui/react";
 
-const Patients: NextPage<
-  InferGetServerSidePropsType<typeof getServerSideProps>
-> = () => {
+const Patients = () => {
   const router = useRouter();
+  const { status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      void router.replace("/");
+    },
+  });
   const [newPatientModal, setNewPatientModal] = useState(false);
   const patients = api.patients.getPatients.useQuery();
 
@@ -33,11 +33,27 @@ const Patients: NextPage<
     );
 
     if (currentPatient === -1) void router.replace("/patients");
-  }, [router, patients.data]);
+  }, [router.query.patientId, patients.data]);
 
   return (
     <Layout title="Pacientes - Amaranto">
-      <div className="h-full py-4">
+      <div className="relative h-full py-4">
+        <Transition
+          show={status === "loading"}
+          as={Fragment}
+          enter="transition ease-out duration-100"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition ease-in duration-75"
+          leaveFrom="transform opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="absolute inset-0 z-20 flex items-center justify-center">
+            <img className="z-20 w-6 animate-spin" src="/loading.svg" />
+            <div className="absolute inset-0 bg-pink-500 opacity-50" />
+          </div>
+        </Transition>
+
         <div className="container mx-auto h-full rounded-lg bg-white p-8 shadow">
           <div className="relative z-10 flex items-center justify-between">
             <h2 className="mb-4 text-2xl font-semibold">Patient List</h2>
@@ -77,20 +93,3 @@ const Patients: NextPage<
 };
 
 export default Patients;
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context);
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: { sessionData: session },
-  };
-};
