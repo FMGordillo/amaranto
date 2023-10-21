@@ -152,7 +152,7 @@ export default function Home() {
                     className="mx-8 mt-4 rounded-full bg-purple-300 py-2 text-center font-semibold hover:bg-purple-400"
                     onClick={() => void signIn()}
                   >
-                    Iniciar sesion
+                    Iniciar sesion!
                   </button>
                 </div>
 
