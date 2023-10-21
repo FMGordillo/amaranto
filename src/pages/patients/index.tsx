@@ -56,18 +56,18 @@ const Patients = () => {
 
         <div className="container mx-auto h-full rounded-lg bg-white p-8 shadow">
           <div className="relative z-10 flex items-center justify-between">
-            <h2 className="mb-4 text-2xl font-semibold">Patient List</h2>
+            <h2 className="mb-4 text-2xl font-semibold">Lista de pacientes</h2>
             <button
               className="rounded-lg bg-fuchsia-700 px-4 py-2 text-white hover:cursor-pointer hover:bg-pink-600"
               onClick={() => setNewPatientModal(true)}
             >
-              Create patient
+              Crear paciente
             </button>
           </div>
 
           {patients.data?.length === 0 ? (
             <div className="relative isolate -mt-8 flex h-full items-center justify-center rounded-md px-8">
-              <h1 className="z-10">Create a patient</h1>
+              <h1 className="z-10">Crear paciente</h1>
               <div className="absolute inset-0 bg-pink-50 blur" />
             </div>
           ) : (

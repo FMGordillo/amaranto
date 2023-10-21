@@ -1,5 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { FormEvent, Fragment } from "react";
+import { type FormEvent, Fragment } from "react";
 import invariant from "tiny-invariant";
 import { api } from "~/utils/api";
 
@@ -64,7 +64,7 @@ export default function CreatePatientModal({
                   as="h3"
                   className="text-lg font-medium leading-6 text-gray-900"
                 >
-                  Create a new patient
+                  Crear nuevo paciente
                 </Dialog.Title>
                 <div className="mt-2">
                   <form onSubmit={(e) => void handleSubmit(e)}>
@@ -73,7 +73,7 @@ export default function CreatePatientModal({
                         htmlFor="name"
                         className="mb-2 block text-sm font-medium text-gray-600"
                       >
-                        Name
+                        Nombre
                       </label>
                       <input
                         id="name"
@@ -86,7 +86,7 @@ export default function CreatePatientModal({
                       type="submit"
                       className="rounded-lg bg-fuchsia-700 px-4 py-2 text-white hover:bg-pink-600"
                     >
-                      Create Patient
+                      Crear
                     </button>
                   </form>
                 </div>
