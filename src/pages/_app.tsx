@@ -1,6 +1,7 @@
 import { SessionProvider } from "next-auth/react";
 import { type AppType } from "next/app";
 import { type Session } from "next-auth";
+import { Analytics } from "@vercel/analytics/react";
 
 import { api } from "~/utils/api";
 
@@ -15,6 +16,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={session}>
       <Component {...pageProps} />
+      <Analytics />
     </SessionProvider>
   );
 };
