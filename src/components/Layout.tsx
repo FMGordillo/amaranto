@@ -34,8 +34,18 @@ const Layout: FunctionComponent<Props> = ({
     <>
       <Head>
         <title>{title ?? "Amaranto"}</title>
-        <meta name="description" content="Tu clínica digital" />
+        <meta
+          name="description"
+          content="Gestioná tus pacientes en tu clínica digital"
+        />
         <link rel="icon" href="/favicon.ico" />
+        <meta
+          property="og:title"
+          content="Amaranto - Tu Clínica Digital"
+          key="title"
+        />
+        <meta property="og:image" content="/og_image.jpeg" />
+        <meta property="og:url" content="https://amaranto.chirotech.dev/" />
       </Head>
       <div className={`grid min-h-screen ${gridRowsStyle}`}>
         {!hideHeader && <Header />}
