@@ -118,7 +118,11 @@ export default function Home() {
             <h1 className="mb-8 select-none text-center text-4xl font-bold">
               Demostración
             </h1>
-            <video muted controls className="w-1/2 ring-8 ring-pink-800">
+            <video
+              muted
+              controls
+              className="min-w-[520px] px-4 lg:w-1/2 xl:w-1/3"
+            >
               <source src="/main_platform.mp4" />
             </video>
           </section>
