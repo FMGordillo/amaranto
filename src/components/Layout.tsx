@@ -46,7 +46,6 @@ const Layout: FunctionComponent<Props> = ({
           content="Amaranto - Tu Clínica Digital"
           key="title"
         />
-        <meta property="og:image" content="/og_image.jpeg" />
         <meta property="og:url" content="https://amaranto.chirotech.dev/" />
         <meta property="og:site_name" content="Amaranto - Tu Clínica Digital" />
         <meta property="og:title" content="Amaranto - Tu Clínica Digital" />
@@ -54,7 +53,7 @@ const Layout: FunctionComponent<Props> = ({
           property="og:description"
           content="Gestioná tus pacientes en tu clínica digital"
         />
-        <meta property="og:image" itemProp="image" content="/og_title.jpeg" />
+        <meta property="og:image" itemProp="image" content="/og_square.png" />
         <meta property="og:type" content="website" />
       </Head>
       <div className={`grid min-h-screen ${gridRowsStyle}`}>
