@@ -1,38 +1,59 @@
 {
-	"title_2": "Your digital clinic",
-	"section-features": {
-		"title": "What can it do",
-		"patients": "Manage your patients",
-		"visits": "Register your visits",
-		"clinical-records": "Generate clinical record's summary"
-	},
-	"section-demo": {
-		"title": "Demo"
-	},
-	"section-pricing": {
-		"title": "Pricing",
-		"free-tier": {
-			"title": "Closed beta",
-			"feature-1": "Unlimited patients",
-			"feature-2": "Unlimited clinical records",
-			"feature-3": "Basic support",
-			"cta": "Sign up to the beta"
-		},
-		"plus-tier": {
-			"title": "Closed beta",
-			"subtitle": "All in the beta, plus:",
-			"feature-1": "Clinical record summary",
-			"feature-2": "Digitalize your clinical records",
-			"feature-3": "Powered by Artificial Intelligence",
-			"cta": "Coming soon"
-		},
-		"enterprise-tier": {
-			"title": "Enterprise",
-			"subtitle": "All in Plus, plus:",
-			"feature-1": "Your data in your medical center",
-			"feature-2": "Technical support",
-			"feature-3": "Priority support 24/7",
-			"cta": "Contact us"
-		}
-	}
+  "title_2": "Your digital clinic",
+  "section-features": {
+    "title": "What can it do",
+    "patients": "Manage your patients",
+    "visits": "Register your visits",
+    "clinical-records": "Generate clinical record's summary"
+  },
+  "section-demo": {
+    "title": "Demo"
+  },
+  "section-pricing": {
+    "title": "Pricing",
+    "free-tier": {
+      "title": "Closed beta",
+      "feature-1": "Unlimited patients",
+      "feature-2": "Unlimited clinical records",
+      "feature-3": "Basic support",
+      "cta": "Sign up to the beta"
+    },
+    "plus-tier": {
+      "title": "Closed beta",
+      "subtitle": "All in the beta, plus:",
+      "feature-1": "Clinical record summary",
+      "feature-2": "Digitalize your clinical records",
+      "feature-3": "Powered by Artificial Intelligence",
+      "cta": "Coming soon"
+    },
+    "enterprise-tier": {
+      "title": "Enterprise",
+      "subtitle": "All in Plus, plus:",
+      "feature-1": "Your data in your medical center",
+      "feature-2": "Technical support",
+      "feature-3": "Priority support 24/7",
+      "cta": "Contact us"
+    }
+  },
+  "section-faq": {
+    "title": "Frequently Asked Questions",
+    "question-1": {
+      "title": "What is Amaranto?",
+      "content": "It's a digital platform for medical professionals responsible for managing consultations, enriched with tools that make its adoption easier, such as summarizing or digitizing medical records."
+    },
+    "question-2": {
+      "title": "Is it safe?",
+      "content-1": "Sure, we have backup copies saved by region: for clinics in the European Union, and the rest of the world. If security is your priority,",
+      "content-link": "contact us",
+      "content-2": "for isolated databases for your clinic, or to use your own servers."
+    },
+    "question-3": {
+      "title": "If I use the Beta platform, will my data be secure?",
+      "content": "Absolutely! We encrypt the information end-to-end, and we don't have access to the information when it reaches our servers, even in the Beta."
+    },
+    "question-4": {
+      "title": "When will the platform be launched?",
+      "content": "We are improving the user experience of the platform, along with enhancing server resilience. We don't have a defined date yet; it depends on how many registrations we have in the Beta program and the interaction they have with it."
+    }
+  }
 }

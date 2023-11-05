@@ -1,39 +1,59 @@
-
 {
-	"title_2": "Tu clinica digital",
-	"section-features": {
-		"title": "Qué puede hacer",
-		"patients": "Gestionar tus pacientes",
-		"visits": "Registra tus consultas",
-		"clinical-records": "Genera resumen de historias clínicas"
-	},
-	"section-demo": {
-		"title": "Demostración"
-	},
-	"section-pricing": {
-		"title": "Tarifas",
-		"free-tier": {
-			"title": "Beta cerrada",
-			"feature-1": "Pacientes ilimitados",
-			"feature-2": "Historias clínicas ilimitadas",
-			"feature-3": "Soporte básico",
-			"cta": "Registrame a la beta"
-		},
-		"plus-tier": {
-			"title": "Plus",
-			"subtitle": "Todo en Free, más:",
-			"feature-1": "Resumen de pacientes",
-			"feature-2": "Digitalizá tus historias clínicas",
-			"feature-3": "Potenciado con Inteligencia Artificial",
-			"cta": "Próximamente"
-		},
-		"enterprise-tier": {
-			"title": "Empresas",
-			"subtitle": "Todo en Plus, más:",
-			"feature-1": "Tus datos en tu centro médico",
-			"feature-2": "Soporte técnico para migraciones",
-			"feature-3": "Soporte prioritario 24/7",
-			"cta": "Contáctanos"
-		}
-	}
+  "title_2": "Tu clinica digital",
+  "section-features": {
+    "title": "Qué puede hacer",
+    "patients": "Gestionar tus pacientes",
+    "visits": "Registra tus consultas",
+    "clinical-records": "Genera resumen de historias clínicas"
+  },
+  "section-demo": {
+    "title": "Demostración"
+  },
+  "section-pricing": {
+    "title": "Tarifas",
+    "free-tier": {
+      "title": "Beta cerrada",
+      "feature-1": "Pacientes ilimitados",
+      "feature-2": "Historias clínicas ilimitadas",
+      "feature-3": "Soporte básico",
+      "cta": "Registrame a la beta"
+    },
+    "plus-tier": {
+      "title": "Plus",
+      "subtitle": "Todo en Free, más:",
+      "feature-1": "Resumen de pacientes",
+      "feature-2": "Digitalizá tus historias clínicas",
+      "feature-3": "Potenciado con Inteligencia Artificial",
+      "cta": "Próximamente"
+    },
+    "enterprise-tier": {
+      "title": "Empresas",
+      "subtitle": "Todo en Plus, más:",
+      "feature-1": "Tus datos en tu centro médico",
+      "feature-2": "Soporte técnico para migraciones",
+      "feature-3": "Soporte prioritario 24/7",
+      "cta": "Contáctanos"
+    }
+  },
+  "section-faq": {
+    "title": "Preguntas frecuentes",
+    "question-1": {
+      "title": "¿Qué es Amaranto?",
+      "content": "Es una plataforma digital para profesionales médicos a cargo de gestionar consultas enriquecido con herramientas que facilitan su adopción, como resumen o digitalización de historias clínicas"
+    },
+    "question-2": {
+      "title": "¿Es seguro?",
+      "content-1": "Si, tenemos copias de seguridad guardados por región: para clínicas en la Unión Europea, y el resto del mundo. Si la seguridad es tu prioridad,",
+      "content-link": "contacta con nosotros",
+      "content-2": "para bases de datos aisladas para tu clínica, o usar tus propios servidores."
+    },
+    "question-3": {
+      "title": "Si uso la plataforma en Beta ¿Mis datos estarán seguros?",
+      "content": "¡Totalmente! Encriptamos la información de punta a punta, no tenemos acceso a la información al llegar a nuestros servidores, incluso en la Beta."
+    },
+    "question-4": {
+      "title": "¿Cuándo se lanzará la plataforma?",
+      "content": "Estamos mejorando la experiencia de usuario de la plataforma, en conjunto con ampliar la resilencia de los servidores. Aún no tenemos fecha definida, depende cuantos inscriptos tengamos en el programa Beta, y la interacción que tengan sobre el mismo"
+    }
+  }
 }

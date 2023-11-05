@@ -244,47 +244,40 @@ export default function Home() {
 
           <section className="flex flex-col items-center gap-4 py-32">
             <h1 className="mb-8 select-none text-center text-4xl font-bold">
-              Preguntas frecuentes
+              {t("section-faq.title")}
             </h1>
 
             <div className="w-full max-w-lg">
               <FAQ
                 data={[
                   {
-                    content:
-                      "Es una plataforma digital para profesionales médicos a cargo de gestionar consultas enriquecido con herramientas que facilitan su adopción, como resumen o digitalización de historias clínicas",
-                    title: "¿Qué es Amaranto?",
+                    content: t("section-faq.question-1.content"),
+                    title: t("section-faq.question-1.title"),
                   },
                   {
                     content: (
                       <span>
-                        Si, tenemos copias de seguridad guardados por región:
-                        para clínicas en la Unión Europea, y el resto del mundo.
-                        Si la seguridad es tu prioridad,{" "}
+                        {t("section-faq.question-2.content-1")}{" "}
                         <a
                           className="text-blue-500 underline"
                           href="mailto:facundo@chirotech.dev"
                           rel="noreferrer noopener"
                           target="_blank"
                         >
-                          contacta con nosotros
+                          {t("section-faq.question-2.content-link")}
                         </a>{" "}
-                        para bases de datos aisladas para tu clínica, o usar tus
-                        propios servidores.
+                        {t("section-faq.question-2.content-2")}
                       </span>
                     ),
-                    title: "¿Es seguro?",
+                    title: t("section-faq.question-2.title"),
                   },
                   {
-                    content:
-                      "¡Totalmente! Encriptamos la información de punta a punta, no tenemos acceso a la información al llegar a nuestros servidores, incluso en la Beta.",
-                    title:
-                      "Si uso la plataforma en Beta ¿Mis datos estarán seguros?",
+                    content: t("section-faq.question-3.content"),
+                    title: t("section-faq.question-3.title"),
                   },
                   {
-                    content:
-                      "Estamos mejorando la experiencia de usuario de la plataforma, en conjunto con ampliar la resilencia de los servidores. Aún no tenemos fecha definida, depende cuantos inscriptos tengamos en el programa Beta, y la interacción que tengan sobre el mismo",
-                    title: "¿Cuándo se lanzará la plataforma?",
+                    content: t("section-faq.question-4.content"),
+                    title: t("section-faq.question-4.title"),
                   },
                 ]}
               />
