@@ -19,7 +19,7 @@ const config = {
   //   locales: ["en"],
   //   defaultLocale: "en",
   // },
-  ...i18nConfig,
+  i18n: i18nConfig.i18n,
 };
 
 export default withAxiom(config);
