@@ -1,0 +1,39 @@
+
+{
+	"title_2": "Tu clinica digital",
+	"section-features": {
+		"title": "Qué puede hacer",
+		"patients": "Gestionar tus pacientes",
+		"visits": "Registra tus consultas",
+		"clinical-records": "Genera resumen de historias clínicas"
+	},
+	"section-demo": {
+		"title": "Demostración"
+	},
+	"section-pricing": {
+		"title": "Tarifas",
+		"free-tier": {
+			"title": "Beta cerrada",
+			"feature-1": "Pacientes ilimitados",
+			"feature-2": "Historias clínicas ilimitadas",
+			"feature-3": "Soporte básico",
+			"cta": "Registrame a la beta"
+		},
+		"plus-tier": {
+			"title": "Plus",
+			"subtitle": "Todo en Free, más:",
+			"feature-1": "Resumen de pacientes",
+			"feature-2": "Digitalizá tus historias clínicas",
+			"feature-3": "Potenciado con Inteligencia Artificial",
+			"cta": "Próximamente"
+		},
+		"enterprise-tier": {
+			"title": "Empresas",
+			"subtitle": "Todo en Plus, más:",
+			"feature-1": "Tus datos en tu centro médico",
+			"feature-2": "Soporte técnico para migraciones",
+			"feature-3": "Soporte prioritario 24/7",
+			"cta": "Contáctanos"
+		}
+	}
+}

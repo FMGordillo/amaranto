@@ -1,10 +1,11 @@
+import FAQ from "~/components/FAQ";
 import Layout from "~/components/Layout";
 import Link from "next/link";
+import type { GetServerSideProps } from "next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import { useRef, useState } from "react";
-import { Disclosure } from "@headlessui/react";
-import FAQ from "~/components/FAQ";
+import { useState } from "react";
+import { useTranslation } from "next-i18next";
 
 type FeatureImage = "patients" | "records" | "ai" | undefined;
 
@@ -15,9 +16,9 @@ const FeatureImages: Record<Exclude<FeatureImage, undefined>, string> = {
 };
 
 export default function Home() {
+  const { t } = useTranslation();
   const [currentImage, setCurrentImage] = useState<FeatureImage>();
-  const router = useRouter();
-  const { data: user, status } = useSession();
+  const { data: user } = useSession();
 
   const handleFeatureHover = (image: Exclude<FeatureImage, undefined>) => {
     setCurrentImage(image);
@@ -51,7 +52,7 @@ export default function Home() {
                 <br />
                 <span className="inline-block bg-neutral-950/50 px-4">
                   <span className="inline-block bg-gradient-to-r from-pink-600 to-purple-400 bg-clip-text py-1 text-5xl font-bold text-transparent">
-                    Tu clinica digital
+                    {t("title_2")}
                   </span>
                 </span>
               </h1>
@@ -60,7 +61,7 @@ export default function Home() {
 
           <section className="select-none py-32">
             <h1 className="mb-8 select-none text-center text-4xl font-bold">
-              Qué puede hacer
+              {t("section-features.title")}
             </h1>
 
             <div className="mx-auto grid max-w-5xl grid-cols-[1fr] items-center justify-center gap-4 rounded-md border md:grid-cols-[1fr_1fr]">
@@ -73,7 +74,7 @@ export default function Home() {
                     <img className="w-8 p-1" src="/person-add.svg" />
                   </div>
                   <span className="text-xl font-bold">
-                    Gestiona tus pacientes
+                    {t("section-features.patients")}
                   </span>
                 </li>
 
@@ -85,7 +86,7 @@ export default function Home() {
                     <img className="w-8 p-1" src="/book.svg" />
                   </div>
                   <span className="text-xl font-bold">
-                    Registra tus consultas
+                    {t("section-features.visits")}
                   </span>
                 </li>
 
@@ -97,7 +98,7 @@ export default function Home() {
                     <img className="w-8 p-1" src="/document.svg" />
                   </div>
                   <span className="text-xl font-bold">
-                    Genera resumen de historias clínicas{" "}
+                    {t("section-features.visits")}{" "}
                     <span className="text-bold rounded-2xl border-2 border-fuchsia-300 bg-fuchsia-50 px-2 font-bold text-fuchsia-700">
                       NEW
                     </span>
@@ -116,7 +117,7 @@ export default function Home() {
 
           <section className="flex flex-col items-center gap-4 py-32">
             <h1 className="mb-8 select-none text-center text-4xl font-bold">
-              Demostración
+              {t("section-demo.title")}
             </h1>
             <video
               muted
@@ -128,26 +129,30 @@ export default function Home() {
           </section>
 
           <section className="container mx-auto py-32">
-            <h1 className="mb-8 p-4 text-center text-4xl font-bold">Tarifas</h1>
+            <h1 className="mb-8 p-4 text-center text-4xl font-bold">
+              {t("section-pricing.title")}
+            </h1>
 
             <div className="flex flex-col items-center justify-center gap-4 md:flex-row">
               <div className="md:grid-cols[120px-auto-120px] grid max-w-sm gap-8 rounded-lg pb-8 shadow-lg ring-purple-500 transition-all hover:ring md:w-1/3">
                 <div className="flex items-center rounded-lg rounded-b bg-purple-400 py-4 pl-8">
-                  <h2 className="text-2xl font-semibold">Beta cerrada</h2>
+                  <h2 className="text-2xl font-semibold">
+                    {t("section-pricing.free-tier.title")}
+                  </h2>
                 </div>
                 <div className="px-8">
                   <ul className="mt-4 flex list-inside flex-col gap-2">
                     <li className="flex gap-2">
                       <img className="w-4" src="/check_free.svg" />
-                      <span>Pacientes ilimitados</span>
+                      <span>{t("section-pricing.free-tier.feature-1")}</span>
                     </li>
                     <li className="flex gap-2">
                       <img className="w-4" src="/check_free.svg" />
-                      <span>Historias clínicas ilimitadas</span>
+                      <span>{t("section-pricing.free-tier.feature-2")}</span>
                     </li>
                     <li className="flex gap-2">
                       <img className="w-4" src="/check_free.svg" />
-                      <span>Soporte basico</span>
+                      <span>{t("section-pricing.free-tier.feature-3")}</span>
                     </li>
                   </ul>
                 </div>
@@ -158,53 +163,70 @@ export default function Home() {
                   target="_blank"
                   rel="noreferrer noopener"
                 >
-                  Registrame a la beta 📝
+                  {t("section-pricing.free-tier.cta")}{" "}
+                  <span role="img" aria-label="memo">
+                    📝
+                  </span>
                 </a>
               </div>
 
               <div className="grid-cols[120px-auto-120px] grid max-w-sm gap-8 rounded-lg  pb-8 shadow-lg ring-fuchsia-700 transition-all hover:ring md:w-1/3">
                 <div className="flex items-center rounded-lg rounded-b bg-fuchsia-700 py-4 pl-8">
-                  <h2 className="text-2xl font-semibold text-white">Plus</h2>
+                  <h2 className="text-2xl font-semibold text-white">
+                    {t("section-pricing.plus-tier.title")}
+                  </h2>
                 </div>
                 <div className="flex flex-col gap-4 px-8">
-                  <p className="font-semibold">Todo en Free, más:</p>
+                  <p className="font-semibold">
+                    {t("section-pricing.plus-tier.subtitle")}
+                  </p>
                   <ul className="flex list-inside flex-col gap-2">
                     <li className="flex gap-2">
                       <img className="w-4" src="/check.svg" />
-                      <span>Resumen de paciente</span>
+                      <span>{t("section-pricing.plus-tier.feature-1")}</span>
                     </li>
                     <li className="flex gap-2">
                       <img className="w-4" src="/check.svg" />
-                      <span>Importá tus historias clínicas en papel</span>
+                      <span>{t("section-pricing.plus-tier.feature-2")}</span>
                     </li>
                   </ul>
                   <p className="pt-3 text-center font-semibold">
-                    Potenciado con Inteligencia Artificial
+                    <span>{t("section-pricing.plus-tier.feature-3")}</span>
                   </p>
                 </div>
                 <button className="mx-8 rounded-full bg-fuchsia-400 py-2 font-semibold hover:bg-fuchsia-500">
-                  Próximamente
+                  <span>{t("section-pricing.plus-tier.cta")}</span>
                 </button>
               </div>
 
               <div className="grid-cols[120px-auto-120px] grid max-w-sm gap-8 rounded-lg  pb-8 shadow-lg ring-pink-600 transition-all hover:ring md:w-1/3">
                 <div className="flex items-center rounded-lg rounded-b bg-pink-600 py-4 pl-8">
-                  <h2 className="text-2xl font-semibold">Enterprise</h2>
+                  <h2 className="text-2xl font-semibold">
+                    {t("section-pricing.enterprise-tier.title")}
+                  </h2>
                 </div>
                 <div className="px-8">
-                  <p className="font-semibold">Todo en Free, más:</p>
+                  <p className="font-semibold">
+                    {t("section-pricing.enterprise-tier.subtitle")}
+                  </p>
                   <ul className="mt-4 flex flex-col gap-2">
                     <li className="flex gap-2">
                       <img className="w-4" src="/check_premium.svg" />
-                      <span>Tus datos en tu centro</span>
+                      <span>
+                        {t("section-pricing.enterprise-tier.feature-1")}
+                      </span>
                     </li>
                     <li className="flex gap-2">
                       <img className="w-4" src="/check_premium.svg" />
-                      <span>Soporte para migraciones</span>
+                      <span>
+                        {t("section-pricing.enterprise-tier.feature-2")}
+                      </span>
                     </li>
                     <li className="flex gap-2">
                       <img className="w-4" src="/check_premium.svg" />
-                      <span>Soporte prioritario 24/7</span>
+                      <span>
+                        {t("section-pricing.enterprise-tier.feature-3")}
+                      </span>
                     </li>
                   </ul>
                 </div>
@@ -214,7 +236,7 @@ export default function Home() {
                   target="_blank"
                   rel="noreferrer noopener"
                 >
-                  Contáctanos
+                  {t("section-pricing.enterprise-tier.cta")}
                 </a>
               </div>
             </div>
@@ -274,3 +296,17 @@ export default function Home() {
   );
   // }
 }
+
+export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+  if (locale) {
+    return {
+      props: {
+        ...(await serverSideTranslations(locale, ["common"])),
+      },
+    };
+  } else {
+    return {
+      props: {},
+    };
+  }
+};

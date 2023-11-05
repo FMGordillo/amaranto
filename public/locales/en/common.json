@@ -1,0 +1,38 @@
+{
+	"title_2": "Your digital clinic",
+	"section-features": {
+		"title": "What can it do",
+		"patients": "Manage your patients",
+		"visits": "Register your visits",
+		"clinical-records": "Generate clinical record's summary"
+	},
+	"section-demo": {
+		"title": "Demo"
+	},
+	"section-pricing": {
+		"title": "Pricing",
+		"free-tier": {
+			"title": "Closed beta",
+			"feature-1": "Unlimited patients",
+			"feature-2": "Unlimited clinical records",
+			"feature-3": "Basic support",
+			"cta": "Sign up to the beta"
+		},
+		"plus-tier": {
+			"title": "Closed beta",
+			"subtitle": "All in the beta, plus:",
+			"feature-1": "Clinical record summary",
+			"feature-2": "Digitalize your clinical records",
+			"feature-3": "Powered by Artificial Intelligence",
+			"cta": "Coming soon"
+		},
+		"enterprise-tier": {
+			"title": "Enterprise",
+			"subtitle": "All in Plus, plus:",
+			"feature-1": "Your data in your medical center",
+			"feature-2": "Technical support",
+			"feature-3": "Priority support 24/7",
+			"cta": "Contact us"
+		}
+	}
+}
