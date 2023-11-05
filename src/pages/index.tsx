@@ -98,7 +98,7 @@ export default function Home() {
                     <img className="w-8 p-1" src="/document.svg" />
                   </div>
                   <span className="text-xl font-bold">
-                    {t("section-features.visits")}{" "}
+                    {t("section-features.clinical-records")}{" "}
                     <span className="text-bold rounded-2xl border-2 border-fuchsia-300 bg-fuchsia-50 px-2 font-bold text-fuchsia-700">
                       NEW
                     </span>
@@ -115,7 +115,7 @@ export default function Home() {
             </div>
           </section>
 
-          <section className="flex flex-col items-center gap-4 py-32">
+          <section className="flex flex-col items-center gap-4 pb-32">
             <h1 className="mb-8 select-none text-center text-4xl font-bold">
               {t("section-demo.title")}
             </h1>
@@ -128,7 +128,7 @@ export default function Home() {
             </video>
           </section>
 
-          <section className="container mx-auto py-32">
+          <section className="container mx-auto pb-32">
             <h1 className="mb-8 p-4 text-center text-4xl font-bold">
               {t("section-pricing.title")}
             </h1>
@@ -242,7 +242,7 @@ export default function Home() {
             </div>
           </section>
 
-          <section className="flex flex-col items-center gap-4 py-32">
+          <section className="flex flex-col items-center gap-4 pb-32">
             <h1 className="mb-8 select-none text-center text-4xl font-bold">
               {t("section-faq.title")}
             </h1>

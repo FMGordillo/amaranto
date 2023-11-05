@@ -1,5 +1,8 @@
 {
   "title_2": "Tu clinica digital",
+  "header": {
+    "cta": "Registrate a la beta"
+  },
   "section-features": {
     "title": "Qué puede hacer",
     "patients": "Gestionar tus pacientes",
@@ -55,5 +58,8 @@
       "title": "¿Cuándo se lanzará la plataforma?",
       "content": "Estamos mejorando la experiencia de usuario de la plataforma, en conjunto con ampliar la resilencia de los servidores. Aún no tenemos fecha definida, depende cuantos inscriptos tengamos en el programa Beta, y la interacción que tengan sobre el mismo"
     }
+  },
+  "section-footer": {
+    "powered-by": "Desarrollador por"
   }
 }

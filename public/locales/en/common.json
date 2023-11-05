@@ -1,5 +1,8 @@
 {
   "title_2": "Your digital clinic",
+  "header": {
+    "cta": "Register to the beta"
+  },
   "section-features": {
     "title": "What can it do",
     "patients": "Manage your patients",
@@ -55,5 +58,8 @@
       "title": "When will the platform be launched?",
       "content": "We are improving the user experience of the platform, along with enhancing server resilience. We don't have a defined date yet; it depends on how many registrations we have in the Beta program and the interaction they have with it."
     }
+  },
+  "section-footer": {
+    "powered-by": "Created by"
   }
 }

@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Header from "./Header";
 import { useMemo, type FunctionComponent, type PropsWithChildren } from "react";
+import { useTranslation } from "next-i18next";
 
 type Props = PropsWithChildren<{
   hideFooter?: boolean;
@@ -14,6 +15,7 @@ const Layout: FunctionComponent<Props> = ({
   children,
   title,
 }) => {
+  const { t } = useTranslation();
   const gridRowsStyle = useMemo(() => {
     if (hideHeader && hideFooter) {
       return "grid-rows-[1fr]";
@@ -46,6 +48,14 @@ const Layout: FunctionComponent<Props> = ({
         />
         <meta property="og:image" content="/og_image.jpeg" />
         <meta property="og:url" content="https://amaranto.chirotech.dev/" />
+        <meta property="og:site_name" content="Amaranto - Tu Clínica Digital" />
+        <meta property="og:title" content="Amaranto - Tu Clínica Digital" />
+        <meta
+          property="og:description"
+          content="Gestioná tus pacientes en tu clínica digital"
+        />
+        <meta property="og:image" itemProp="image" content="/og_title.jpeg" />
+        <meta property="og:type" content="website" />
       </Head>
       <div className={`grid min-h-screen ${gridRowsStyle}`}>
         {!hideHeader && <Header />}
@@ -61,7 +71,7 @@ const Layout: FunctionComponent<Props> = ({
                 <img className="w-8" src="/linkedin_icon.svg" />
               </a>
               <p className="text-right text-sm">
-                Desarrollador por
+                {t("section-footer.powered-by")}
                 <br />
                 ChiroTech
               </p>
