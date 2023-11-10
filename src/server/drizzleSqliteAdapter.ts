@@ -7,7 +7,7 @@ import {
   sqliteTable,
   text,
 } from "drizzle-orm/sqlite-core";
-import { Adapter, AdapterAccount } from "next-auth/adapters";
+import { Adapter, AdapterAccount, AdapterUser } from "next-auth/adapters";
 
 export function createTables(sqliteTable: SQLiteTableFn) {
   const users = sqliteTable("user", {
@@ -162,13 +162,10 @@ export function SQLiteDrizzleAdapter(
         )
         .get();
 
-      console.log("getUserByAccount", results);
-
       if (!results) {
         return null;
       }
-
-      return Promise.resolve(results).then((results) => results.user);
+      return Promise.resolve(results).then((results) => results as unknown as AdapterUser);
     },
     deleteSession(sessionToken) {
       return (

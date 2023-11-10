@@ -1,7 +1,9 @@
 {
   "title_2": "Tu clinica digital",
   "header": {
-    "cta": "Registrate a la beta"
+    "cta": "Registrate a la beta",
+    "sign-in": "Iniciar sesión",
+    "sign-out": "Cerrar sesión"
   },
   "section-features": {
     "title": "Qué puede hacer",

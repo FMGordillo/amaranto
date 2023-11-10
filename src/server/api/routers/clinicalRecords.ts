@@ -1,16 +1,65 @@
-import { eq, sql } from "drizzle-orm";
+import { desc, and, eq, sql } from "drizzle-orm";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import { clinicalRecords } from "~/server/db/schema";
+import { clinicalRecords, patients } from "~/server/db/schema";
+import { getPagination } from "~/utils/db";
 
 export const clinicalRecordsRouter = createTRPCRouter({
+  getById: protectedProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      return ctx.db
+        .select()
+        .from(clinicalRecords)
+        .where(eq(clinicalRecords.id, input))
+        .innerJoin(patients, eq(clinicalRecords.patientId, patients.id))
+        .limit(1);
+    }),
   createRecord: protectedProcedure
     .input(z.object({ message: z.string(), patientId: z.string() }))
     .mutation(({ ctx, input }) => {
-      return ctx.db.insert(clinicalRecords).values({
-        message: input.message,
-        patientId: input.patientId,
+      return ctx.db
+        .insert(clinicalRecords)
+        .values({
+          message: input.message,
+          patientId: input.patientId,
+        })
+        .returning();
+    }),
+
+  getAll: protectedProcedure
+    .input(z.object({ page: z.string().default("1") }))
+    .query(async ({ ctx, input }) => {
+      const page = parseInt(input.page, 10);
+      const LIMIT = 5;
+
+      const [recordsCount] = await ctx.db
+        .select({ count: sql<number>`count(*)` })
+        .from(clinicalRecords)
+        .innerJoin(patients, eq(clinicalRecords.patientId, patients.id))
+        .where(eq(patients.doctorId, ctx.session.user.id));
+
+      const totalRecords = recordsCount?.count ?? 0;
+      const { offset, ...paginationData } = getPagination({
+        page,
+        limit: LIMIT,
+        total: totalRecords,
       });
+
+      const records = await ctx.db
+        .select({ data: clinicalRecords, patient: patients })
+        .from(clinicalRecords)
+        .innerJoin(patients, eq(clinicalRecords.patientId, patients.id))
+        .where(eq(patients.doctorId, ctx.session.user.id))
+        .orderBy(desc(clinicalRecords.createdAt))
+        .offset(offset)
+        .limit(LIMIT);
+
+      return {
+        ...paginationData,
+        records,
+        totalRecords,
+      };
     }),
 
   getByPatient: protectedProcedure
@@ -23,33 +72,31 @@ export const clinicalRecordsRouter = createTRPCRouter({
       );
 
       const totalRecords = totalRecordsQuery.rows[0]?.total as number;
-      const offset = input.page - 1 * LIMIT;
 
-      const pages = [...Array(Math.ceil(totalRecords / LIMIT)).keys()].map(
-        (k) => k + 1,
-      );
-
-      const startPage = Math.max(input.page - 5, 1);
-      const endPage = Math.min(input.page + 5, pages.length);
-      const visiblePages = pages.slice(startPage - 1, endPage);
-
-      const hasPreviousPage = input.page > 1;
-      const hasNextPage = input.page < pages.length;
+      const { offset, ...paginationData } = getPagination({
+        page: input.page,
+        limit: LIMIT,
+        total: totalRecords,
+      });
 
       const records = await ctx.db
-        .select()
+        .select({ data: clinicalRecords })
         .from(clinicalRecords)
-        .where(eq(clinicalRecords.patientId, input.patientId))
+        .innerJoin(patients, eq(clinicalRecords.patientId, patients.id))
+        .where(
+          and(
+            eq(clinicalRecords.patientId, input.patientId),
+            eq(patients.doctorId, ctx.session.user.id),
+          ),
+        )
+        .orderBy(desc(clinicalRecords.createdAt))
         .offset(offset)
         .limit(LIMIT);
 
       return {
-        hasNextPage,
-        hasPreviousPage,
-        pages,
+        ...paginationData,
         records,
         totalRecords,
-        visiblePages,
       };
     }),
 });

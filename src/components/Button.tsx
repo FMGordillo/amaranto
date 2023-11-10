@@ -25,10 +25,10 @@ export default function Button({
 
   return (
     <button
-      className={`flex gap-2 items-center rounded-lg px-4 py-2 select-none ${variantClass} ${className}`}
+      className={`flex select-none items-center gap-2 rounded-lg px-4 py-2 ${variantClass} ${className}`}
       {...props}
     >
-      {loading && <img className="animate-spin w-6" src="/loading.svg" />}
+      {loading && <img className="w-6 animate-spin" src="/loading.svg" />}
       {children}
     </button>
   );

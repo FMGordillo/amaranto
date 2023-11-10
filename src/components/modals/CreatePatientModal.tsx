@@ -2,10 +2,19 @@ import { Dialog, Transition } from "@headlessui/react";
 import { type FormEvent, Fragment } from "react";
 import invariant from "tiny-invariant";
 import { api } from "~/utils/api";
+import { useNotification } from "../Notification";
+
+export type Patient = {
+  name: string;
+  id: string;
+  doctorId: string;
+  createdAt: string;
+  updatedAt: string;
+};
 
 type CreatePatientModalProps = {
   onClose: () => void;
-  onSubmit: () => Promise<unknown>;
+  onSubmit: (data: Patient[]) => void;
   open: boolean;
 };
 
@@ -14,21 +23,35 @@ export default function CreatePatientModal({
   onClose,
   open,
 }: CreatePatientModalProps) {
-  const { mutateAsync: createPatient } =
-    api.patients.createPatient.useMutation();
+  const addNotification = useNotification();
+  const { mutate: createPatient } = api.patients.createPatient.useMutation();
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
       const data = new FormData(e.currentTarget as HTMLFormElement);
 
       const name = data.get("name");
       invariant(name, "Name should be defined");
+      // TODO: Handle error correctly
 
-      void (await createPatient(name.toString()));
-      void onSubmit();
-      onClose();
+      void createPatient(name.toString(), {
+        onSuccess: (data) => {
+          void onSubmit(data);
+          addNotification({
+            title: "Exito",
+            type: "success",
+            message: "Paciente creado correctamente",
+          });
+          onClose();
+        },
+      });
     } catch (error) {
+      addNotification({
+        type: "error",
+        title: "Error",
+        message: "Por favor, consulte con el administrador del sistema",
+      });
       console.log(error);
     }
   };
@@ -59,7 +82,7 @@ export default function CreatePatientModal({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+              <Dialog.Panel className="min-w-md w-full max-w-lg transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                 <Dialog.Title
                   as="h3"
                   className="text-lg font-medium leading-6 text-gray-900"
@@ -67,7 +90,10 @@ export default function CreatePatientModal({
                   Crear nuevo paciente
                 </Dialog.Title>
                 <div className="mt-2">
-                  <form onSubmit={(e) => void handleSubmit(e)}>
+                  <form
+                    className="flex flex-col"
+                    onSubmit={(e) => void handleSubmit(e)}
+                  >
                     <div className="mb-4">
                       <label
                         htmlFor="name"
@@ -84,7 +110,7 @@ export default function CreatePatientModal({
                     </div>
                     <button
                       type="submit"
-                      className="rounded-lg bg-fuchsia-700 px-4 py-2 text-white hover:bg-pink-600"
+                      className="self-end rounded-lg bg-fuchsia-700 px-4 py-2 text-white hover:bg-pink-600"
                     >
                       Crear
                     </button>

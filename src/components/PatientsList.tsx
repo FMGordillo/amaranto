@@ -29,16 +29,13 @@ export default function PatientsList({
     e.preventDefault();
     const data = new FormData(e.currentTarget as HTMLFormElement);
     const name = data.get("name");
-    invariant(
-      typeof patientId === "string",
-      "patientId should be a string",
-    );
+    invariant(typeof patientId === "string", "patientId should be a string");
     invariant(name, "Name should be defined");
 
-    void await mutateAsync({
+    void (await mutateAsync({
       id: patientId,
       name: name.toString(),
-    })
+    }));
 
     void onSubmit();
 
@@ -59,9 +56,9 @@ export default function PatientsList({
         <tbody className="divide-y divide-gray-200">
           {loading && <LoadingPatient />}
           {!loading &&
-            patients &&
-            patients.length > 0 &&
-            patients.map((patient) => (
+            patients?.patients &&
+            patients.patients.length > 0 &&
+            patients.patients.map((patient) => (
               <tr
                 key={patient?.id}
                 className={
@@ -118,6 +115,6 @@ export default function PatientsList({
             ))}
         </tbody>
       </table>
-    </div >
+    </div>
   );
 }

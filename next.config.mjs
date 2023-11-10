@@ -3,7 +3,7 @@
  * for Docker builds.
  */
 import i18nConfig from "./next-i18next.config.js";
-import { withAxiom } from 'next-axiom';
+import { withAxiom } from "next-axiom";
 await import("./src/env.mjs");
 
 /** @type {import("next").NextConfig} */

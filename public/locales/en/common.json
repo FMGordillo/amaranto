@@ -1,7 +1,9 @@
 {
   "title_2": "Your digital clinic",
   "header": {
-    "cta": "Register to the beta"
+    "cta": "Register to the beta",
+    "sign-in": "Sign in",
+    "sign-out": "Sign out"
   },
   "section-features": {
     "title": "What can it do",

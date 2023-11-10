@@ -33,8 +33,8 @@ export const env = createEnv({
       process.env.VERCEL ? z.string() : z.string().url(),
     ),
     // Add ` on ID and SECRET if you want to make sure they're not empty
-    DISCORD_CLIENT_ID: z.string(),
-    DISCORD_CLIENT_SECRET: z.string(),
+    LINKEDIN_CLIENT_ID: z.string(),
+    LINKEDIN_CLIENT_SECRET: z.string(),
   },
 
   /**
@@ -54,8 +54,8 @@ export const env = createEnv({
   runtimeEnv: {
     DATABASE_AUTH_TOKEN: process.env.DATABASE_AUTH_TOKEN,
     DATABASE_URL: process.env.DATABASE_URL,
-    DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
-    DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
+    LINKEDIN_CLIENT_ID: process.env.LINKEDIN_CLIENT_ID,
+    LINKEDIN_CLIENT_SECRET: process.env.LINKEDIN_CLIENT_SECRET,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,

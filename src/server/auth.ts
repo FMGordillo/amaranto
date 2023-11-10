@@ -4,12 +4,37 @@ import {
   type DefaultSession,
   type NextAuthOptions,
 } from "next-auth";
-import DiscordProvider from "next-auth/providers/discord";
 
+import type { LinkedInProfile } from "next-auth/providers/linkedin";
 import { env } from "~/env.mjs";
 import { db } from "~/server/db";
 import { sqliteTable } from "~/server/db/schema";
 import { SQLiteDrizzleAdapter } from "./drizzleSqliteAdapter";
+import { OAuthConfig } from "next-auth/providers";
+
+export const LinkedinProvider = (
+  config: Partial<OAuthConfig<LinkedInProfile>>,
+): OAuthConfig<LinkedInProfile> => ({
+  id: "linkedin",
+  name: "LinkedIn",
+  type: "oauth",
+  client: { token_endpoint_auth_method: "client_secret_post" },
+  issuer: "https://www.linkedin.com",
+  profile: (profile: LinkedInProfile) => ({
+    id: profile.sub as string,
+    name: profile.name as string,
+    email: profile.email as string,
+    image: profile.picture as string,
+  }),
+  wellKnown: "https://www.linkedin.com/oauth/.well-known/openid-configuration",
+  authorization: {
+    params: {
+      scope: "openid profile email",
+    },
+  },
+  style: { logo: "/linkedin.svg", bg: "#069", text: "#fff", bgDark: "#069", logoDark: "/linkedin.svg", textDark: "#fff" },
+  ...config,
+});
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -40,16 +65,20 @@ declare module "next-auth" {
 export const authOptions: NextAuthOptions = {
   debug: true,
   callbacks: {
-    session({ session, token, user }) {
+    session({ session, user }) {
       session.user.id = user.id;
-      return session
-    }
+      return session;
+    },
+    jwt(all) {
+      console.log("me llamaste bb?", all);
+      return all.token;
+    },
   },
   adapter: SQLiteDrizzleAdapter(db, sqliteTable),
   providers: [
-    DiscordProvider({
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
+    LinkedinProvider({
+      clientId: env.LINKEDIN_CLIENT_ID,
+      clientSecret: env.LINKEDIN_CLIENT_SECRET,
     }),
     // CredentialsProvider({
     //   name: "Iniciá sesión",

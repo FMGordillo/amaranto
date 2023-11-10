@@ -8,6 +8,7 @@ import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
 import { useReportWebVitals } from "next-axiom";
+import { NotificationProvider } from "~/components/Notification";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -16,7 +17,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
   useReportWebVitals();
   return (
     <SessionProvider session={session}>
-      <Component {...pageProps} />
+      <NotificationProvider>
+        <Component {...pageProps} />
+      </NotificationProvider>
       <Analytics />
     </SessionProvider>
   );
