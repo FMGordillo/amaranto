@@ -4,6 +4,7 @@ import {
   InferGetServerSidePropsType,
   NextPage,
 } from "next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useState } from "react";
 import invariant from "tiny-invariant";
 import AppLayout from "~/components/AppLayout";
@@ -143,12 +144,15 @@ const PatientPageById: NextPage<
   );
 };
 
-export const getServerSideProps = (context: GetServerSidePropsContext) => {
+export const getServerSideProps = async (context: GetServerSidePropsContext) => {
   const patientId = context.params?.id ?? "";
 
   return {
     props: {
       patientId,
+      ...(await serverSideTranslations(context.locale ?? 'en', [
+        'common',
+      ]))
     },
   };
 };
