@@ -50,3 +50,5 @@ my.db
 .flaskenv*
 !.env.project
 !.env.vault
+
+.react-email

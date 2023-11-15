@@ -87,6 +87,7 @@ const PatientPageById: NextPage<
           </button>
         </div>
 
+        {/*
         <div className="mb-8 flex justify-center">
           <Button
             className="flex items-center gap-2"
@@ -99,6 +100,7 @@ const PatientPageById: NextPage<
             )}{" "}
           </Button>
         </div>
+        */}
 
         <Transition
           appear

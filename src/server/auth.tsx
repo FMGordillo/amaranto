@@ -4,13 +4,38 @@ import {
   type DefaultSession,
   type NextAuthOptions,
 } from "next-auth";
-
+import { Resend } from "resend";
 import type { LinkedInProfile } from "next-auth/providers/linkedin";
 import { env } from "~/env.mjs";
 import { db } from "~/server/db";
 import { sqliteTable } from "~/server/db/schema";
 import { SQLiteDrizzleAdapter } from "./drizzleSqliteAdapter";
 import { OAuthConfig } from "next-auth/providers";
+import type { EmailConfig, EmailUserConfig } from "next-auth/providers/email";
+import LoginEmail from "emails";
+
+const resend = new Resend(env.RESEND_API_KEY);
+
+export const EmailProvider = (options: EmailUserConfig): EmailConfig => {
+  return {
+    id: "email",
+    type: "email",
+    name: "Email",
+    // not being used
+    server: { host: "localhost", port: 25, auth: { user: "", pass: "" } },
+    from: "Amaranto <no-reply@chirotech.dev>",
+    maxAge: 24 * 60 * 60,
+    async sendVerificationRequest(params) {
+      await resend.emails.send({
+        from: "no-reply@chirotech.dev",
+        to: params.identifier,
+        subject: "[Amaranto] Iniciá sesión",
+        react: <LoginEmail url={params.url} />,
+      });
+    },
+    options,
+  };
+};
 
 export const LinkedinProvider = (
   config: Partial<OAuthConfig<LinkedInProfile>>,
@@ -32,7 +57,14 @@ export const LinkedinProvider = (
       scope: "openid profile email",
     },
   },
-  style: { logo: "/linkedin.svg", bg: "#069", text: "#fff", bgDark: "#069", logoDark: "/linkedin.svg", textDark: "#fff" },
+  style: {
+    logo: "/linkedin.svg",
+    bg: "#069",
+    text: "#fff",
+    bgDark: "#069",
+    logoDark: "/linkedin.svg",
+    textDark: "#fff",
+  },
   ...config,
 });
 
@@ -63,14 +95,13 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authOptions: NextAuthOptions = {
-  debug: true,
+  debug: env.NODE_ENV === "development",
   callbacks: {
     session({ session, user }) {
       session.user.id = user.id;
       return session;
     },
     jwt(all) {
-      console.log("me llamaste bb?", all);
       return all.token;
     },
   },
@@ -80,32 +111,9 @@ export const authOptions: NextAuthOptions = {
       clientId: env.LINKEDIN_CLIENT_ID,
       clientSecret: env.LINKEDIN_CLIENT_SECRET,
     }),
-    // CredentialsProvider({
-    //   name: "Iniciá sesión",
-    //   credentials: {
-    //     username: { label: "Username", type: "text", placeholder: "jsmith" },
-    //     password: { label: "Password", type: "password" },
-    //   },
-    //   async authorize(_credentials, _req) {
-    //     const user = await db
-    //       .select()
-    //       .from(users)
-    //       .where(eq(users.email, "me@facundogordillo.com"))
-    //       .get();
-    //     console.log({ user });
-    //     return user as User | null;
-    //   },
-    // }),
-    //
-    /**
-     * ...add more providers here.
-     *
-     * Most other providers require a bit more work than the Discord provider. For example, the
-     * GitHub provider requires you to add the `refresh_token_expires_in` field to the Account
-     * model. Refer to the NextAuth.js docs for the provider you want to use. Example:
-     *
-     * @see https://next-auth.js.org/providers/github
-     */
+    EmailProvider({
+      from: "no-reply@chirotech.dev",
+    }),
   ],
 };
 

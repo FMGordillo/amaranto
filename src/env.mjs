@@ -35,6 +35,7 @@ export const env = createEnv({
     // Add ` on ID and SECRET if you want to make sure they're not empty
     LINKEDIN_CLIENT_ID: z.string(),
     LINKEDIN_CLIENT_SECRET: z.string(),
+    RESEND_API_KEY: z.string(),
   },
 
   /**
@@ -59,6 +60,7 @@ export const env = createEnv({
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
+    RESEND_API_KEY: process.env.RESEND_API_KEY,
     NODE_ENV: process.env.NODE_ENV,
   },
   /**
