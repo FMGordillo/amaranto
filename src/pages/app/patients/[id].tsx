@@ -4,11 +4,9 @@ import {
   InferGetServerSidePropsType,
   NextPage,
 } from "next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useState } from "react";
 import invariant from "tiny-invariant";
 import AppLayout from "~/components/AppLayout";
-import Button from "~/components/Button";
 import Layout from "~/components/Layout";
 import { useNotification } from "~/components/Notification";
 import CreateRecordModal from "~/components/modals/CreateRecordModal";
@@ -23,7 +21,7 @@ const PatientPageById: NextPage<
   const [summary, setSummary] = useState<string | undefined>();
   const [openCreateRecordModal, setOpenCreateRecordModal] = useState(false);
   const { refetch, isLoading, data } = api.patients.getPatientById.useQuery(
-    props.patientId as string,
+    props.patientId!,
   );
 
   const patient = data?.[0]?.patients;
@@ -146,15 +144,12 @@ const PatientPageById: NextPage<
   );
 };
 
-export const getServerSideProps = async (context: GetServerSidePropsContext) => {
+export const getServerSideProps = (context: GetServerSidePropsContext) => {
   const patientId = context.params?.id ?? "";
 
   return {
     props: {
-      patientId,
-      ...(await serverSideTranslations(context.locale ?? 'en', [
-        'common',
-      ]))
+      patientId: Array.isArray(patientId) ? patientId[0] : patientId,
     },
   };
 };

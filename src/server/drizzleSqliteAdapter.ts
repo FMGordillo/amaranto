@@ -165,7 +165,7 @@ export function SQLiteDrizzleAdapter(
       if (!results) {
         return null;
       }
-      return Promise.resolve(results).then((results) => results as unknown as AdapterUser);
+      return Promise.resolve(results).then((results) => results.user);
     },
     deleteSession(sessionToken) {
       return (

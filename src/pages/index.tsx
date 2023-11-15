@@ -1,11 +1,7 @@
 import FAQ from "~/components/FAQ";
 import Layout from "~/components/Layout";
-import Link from "next/link";
-import type { GetServerSideProps, GetStaticProps } from "next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { Suspense, useEffect, useState } from "react";
-import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
 type FeatureImage = "patients" | "records" | "ai" | undefined;
@@ -19,7 +15,6 @@ const FeatureImages: Record<Exclude<FeatureImage, undefined>, string> = {
 export default function Home() {
   const router = useRouter();
   const { status } = useSession();
-  const { t } = useTranslation();
   const [currentImage, setCurrentImage] = useState<FeatureImage>();
 
   const handleFeatureHover = (image: Exclude<FeatureImage, undefined>) => {
@@ -32,12 +27,6 @@ export default function Home() {
     }
   }, [router, status]);
 
-  // TODO: add a loading screen, or Suspense?
-  // if (status === "loading") {
-  //   return <span>loading...</span>;
-  // } else if (status === "authenticated") {
-  //   void router.replace("/patients");
-  // } else {
   return (
     <Suspense fallback="loading">
       <Layout>
@@ -53,7 +42,7 @@ export default function Home() {
                 <br />
                 <span className="inline-block bg-neutral-950/50 px-4">
                   <span className="inline-block bg-gradient-to-r from-pink-600 to-purple-400 bg-clip-text py-1 text-5xl font-bold text-transparent">
-                    {t("title_2")}
+                    Tu clinica digital
                   </span>
                 </span>
               </h1>
@@ -62,7 +51,7 @@ export default function Home() {
 
           <section className="select-none py-32">
             <h1 className="mb-8 select-none text-center text-4xl font-bold">
-              {t("section-features.title")}
+              Qué puede hacer
             </h1>
 
             <div className="mx-auto grid max-w-5xl grid-cols-[1fr] items-center justify-center gap-4 rounded-md border md:grid-cols-[1fr_1fr]">
@@ -75,7 +64,7 @@ export default function Home() {
                     <img className="w-8 p-1" src="/person-add.svg" />
                   </div>
                   <span className="text-xl font-bold">
-                    {t("section-features.patients")}
+                    Gestionar tus pacientes
                   </span>
                 </li>
 
@@ -87,7 +76,7 @@ export default function Home() {
                     <img className="w-8 p-1" src="/book.svg" />
                   </div>
                   <span className="text-xl font-bold">
-                    {t("section-features.visits")}
+                    Registra tus consultas
                   </span>
                 </li>
 
@@ -99,7 +88,7 @@ export default function Home() {
                     <img className="w-8 p-1" src="/document.svg" />
                   </div>
                   <span className="text-xl font-bold">
-                    {t("section-features.clinical-records")}{" "}
+                    Genera resumen de historias clínicas{" "}
                     <span className="text-bold rounded-2xl border-2 border-fuchsia-300 bg-fuchsia-50 px-2 font-bold text-fuchsia-700">
                       NEW
                     </span>
@@ -108,9 +97,8 @@ export default function Home() {
               </ul>
 
               <img
-                className={`hidden transition md:block ${
-                  currentImage ? "opacity-100" : "opacity-0"
-                }`}
+                className={`hidden transition md:block ${currentImage ? "opacity-100" : "opacity-0"
+                  }`}
                 src={FeatureImages[currentImage ?? "patients"]}
               />
             </div>
@@ -118,7 +106,7 @@ export default function Home() {
 
           <section className="flex flex-col items-center gap-4 pb-32">
             <h1 className="mb-8 select-none text-center text-4xl font-bold">
-              {t("section-demo.title")}
+              Demostración
             </h1>
             <video
               muted
@@ -130,41 +118,37 @@ export default function Home() {
           </section>
 
           <section className="container mx-auto pb-32">
-            <h1 className="mb-8 p-4 text-center text-4xl font-bold">
-              {t("section-pricing.title")}
-            </h1>
+            <h1 className="mb-8 p-4 text-center text-4xl font-bold">Tarifas</h1>
 
             <div className="flex flex-col items-center justify-center gap-4 md:flex-row">
               <div className="md:grid-cols[120px-auto-120px] grid max-w-sm gap-8 rounded-lg pb-8 shadow-lg ring-purple-500 transition-all hover:ring md:w-1/3">
                 <div className="flex items-center rounded-lg rounded-b bg-purple-400 py-4 pl-8">
-                  <h2 className="text-2xl font-semibold">
-                    {t("section-pricing.free-tier.title")}
-                  </h2>
+                  <h2 className="text-2xl font-semibold">Beta cerrada</h2>
                 </div>
                 <div className="px-8">
                   <ul className="mt-4 flex list-inside flex-col gap-2">
                     <li className="flex gap-2">
                       <img className="w-4" src="/check_free.svg" />
-                      <span>{t("section-pricing.free-tier.feature-1")}</span>
+                      <span>Pacientes ilimitados</span>
                     </li>
                     <li className="flex gap-2">
                       <img className="w-4" src="/check_free.svg" />
-                      <span>{t("section-pricing.free-tier.feature-2")}</span>
+                      <span>Historias clínicas ilimitadas</span>
                     </li>
                     <li className="flex gap-2">
                       <img className="w-4" src="/check_free.svg" />
-                      <span>{t("section-pricing.free-tier.feature-3")}</span>
+                      <span>Soporte básico</span>
                     </li>
                   </ul>
                 </div>
                 <a
                   className="mx-8 mt-4 rounded-full bg-purple-300 py-2 text-center font-semibold hover:bg-purple-400"
-                  // onClick={() => void signIn()}
+                  onClick={() => void signIn()}
                   href="https://share-eu1.hsforms.com/1QL5wqKPmRj2mNUIpLrEItg2dasdu"
                   target="_blank"
                   rel="noreferrer noopener"
                 >
-                  {t("section-pricing.free-tier.cta")}{" "}
+                  Registrame a la beta{" "}
                   <span role="img" aria-label="memo">
                     📝
                   </span>
@@ -173,61 +157,49 @@ export default function Home() {
 
               <div className="grid-cols[120px-auto-120px] grid max-w-sm gap-8 rounded-lg  pb-8 shadow-lg ring-fuchsia-700 transition-all hover:ring md:w-1/3">
                 <div className="flex items-center rounded-lg rounded-b bg-fuchsia-700 py-4 pl-8">
-                  <h2 className="text-2xl font-semibold text-white">
-                    {t("section-pricing.plus-tier.title")}
-                  </h2>
+                  <h2 className="text-2xl font-semibold text-white">Plus</h2>
                 </div>
                 <div className="flex flex-col gap-4 px-8">
-                  <p className="font-semibold">
-                    {t("section-pricing.plus-tier.subtitle")}
-                  </p>
+                  <p className="font-semibold">Todo en Free, más:</p>
                   <ul className="flex list-inside flex-col gap-2">
                     <li className="flex gap-2">
                       <img className="w-4" src="/check.svg" />
-                      <span>{t("section-pricing.plus-tier.feature-1")}</span>
+                      <span>Resumen de pacientes</span>
                     </li>
                     <li className="flex gap-2">
                       <img className="w-4" src="/check.svg" />
-                      <span>{t("section-pricing.plus-tier.feature-2")}</span>
+                      <span>Digitalizá tus historias clínicas</span>
                     </li>
                   </ul>
                   <p className="pt-3 text-center font-semibold">
-                    <span>{t("section-pricing.plus-tier.feature-3")}</span>
+                    <span>Potenciado con Inteligencia Artificial</span>
                   </p>
                 </div>
                 <button className="mx-8 rounded-full bg-fuchsia-400 py-2 font-semibold hover:bg-fuchsia-500">
-                  <span>{t("section-pricing.plus-tier.cta")}</span>
+                  <span>Próximamente</span>
                 </button>
               </div>
 
               <div className="grid-cols[120px-auto-120px] grid max-w-sm gap-8 rounded-lg  pb-8 shadow-lg ring-pink-600 transition-all hover:ring md:w-1/3">
                 <div className="flex items-center rounded-lg rounded-b bg-pink-600 py-4 pl-8">
                   <h2 className="text-2xl font-semibold">
-                    {t("section-pricing.enterprise-tier.title")}
+                    Grandes consultorios
                   </h2>
                 </div>
                 <div className="px-8">
-                  <p className="font-semibold">
-                    {t("section-pricing.enterprise-tier.subtitle")}
-                  </p>
+                  <p className="font-semibold">Todo en Plus, más:</p>
                   <ul className="mt-4 flex flex-col gap-2">
                     <li className="flex gap-2">
                       <img className="w-4" src="/check_premium.svg" />
-                      <span>
-                        {t("section-pricing.enterprise-tier.feature-1")}
-                      </span>
+                      <span>Tus datos en tu centro médico</span>
                     </li>
                     <li className="flex gap-2">
                       <img className="w-4" src="/check_premium.svg" />
-                      <span>
-                        {t("section-pricing.enterprise-tier.feature-2")}
-                      </span>
+                      <span>Soporte técnico para migraciones</span>
                     </li>
                     <li className="flex gap-2">
                       <img className="w-4" src="/check_premium.svg" />
-                      <span>
-                        {t("section-pricing.enterprise-tier.feature-3")}
-                      </span>
+                      <span>Soporte prioritario 24/7</span>
                     </li>
                   </ul>
                 </div>
@@ -237,7 +209,7 @@ export default function Home() {
                   target="_blank"
                   rel="noreferrer noopener"
                 >
-                  {t("section-pricing.enterprise-tier.cta")}
+                  Contáctanos
                 </a>
               </div>
             </div>
@@ -245,40 +217,48 @@ export default function Home() {
 
           <section className="flex flex-col items-center gap-4 pb-32">
             <h1 className="mb-8 select-none text-center text-4xl font-bold">
-              {t("section-faq.title")}
+              Preguntas frecuentes
             </h1>
 
             <div className="w-full max-w-lg">
               <FAQ
                 data={[
                   {
-                    content: t("section-faq.question-1.content"),
-                    title: t("section-faq.question-1.title"),
+                    content:
+                      "Es una plataforma digital para profesionales médicos a cargo de gestionar consultas enriquecido con herramientas que facilitan su adopción, como resumen o digitalización de historias clínicas",
+                    title: "¿Qué es Amaranto?",
                   },
                   {
                     content: (
                       <span>
-                        {t("section-faq.question-2.content-1")}{" "}
+                        Si, tenemos copias de seguridad guardados por región:
+                        para clínicas en la Unión Europea, y el resto del mundo.
+                        Si la seguridad es tu prioridad,{" "}
                         <a
                           className="text-blue-500 underline"
                           href="mailto:facundo@chirotech.dev"
                           rel="noreferrer noopener"
                           target="_blank"
                         >
-                          {t("section-faq.question-2.content-link")}
+                          contacta con nosotros
                         </a>{" "}
-                        {t("section-faq.question-2.content-2")}
+                        para bases de datos aisladas para tu clínica, o usar tus
+                        propios servidores.
                       </span>
                     ),
-                    title: t("section-faq.question-2.title"),
+                    title:
+                      "¿Es seguro?",
                   },
                   {
-                    content: t("section-faq.question-3.content"),
-                    title: t("section-faq.question-3.title"),
+                    content:
+                      "¡Totalmente! Encriptamos la información de punta a punta, no tenemos acceso a la información al llegar a nuestros servidores, incluso en la Beta.",
+                    title:
+                      "Si uso la plataforma en Beta ¿Mis datos estarán seguros?",
                   },
                   {
-                    content: t("section-faq.question-4.content"),
-                    title: t("section-faq.question-4.title"),
+                    content:
+                      "Estamos mejorando la experiencia de usuario de la plataforma, en conjunto con ampliar la resilencia de los servidores. Aún no tenemos fecha definida, depende cuantos inscriptos tengamos en el programa Beta, y la interacción que tengan sobre el mismo",
+                    title: "¿Cuándo se lanzará la plataforma?",
                   },
                 ]}
               />
@@ -288,19 +268,4 @@ export default function Home() {
       </Layout>
     </Suspense>
   );
-  // }
 }
-
-// export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
-//   return {
-//     props: {
-//       ...(await serverSideTranslations(locale ?? "en", ["common"])),
-//     },
-//   };
-// };
-
-export const getStaticProps: GetStaticProps<object> = async ({ locale }) => ({
-  props: {
-    ...(await serverSideTranslations(locale ?? "en", ["common"])),
-  },
-});

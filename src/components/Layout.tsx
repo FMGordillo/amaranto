@@ -1,7 +1,6 @@
 import Head from "next/head";
 import Header from "./Header";
 import { useMemo, type FunctionComponent, type PropsWithChildren } from "react";
-import { useTranslation } from "next-i18next";
 
 type Props = PropsWithChildren<{
   hideFooter?: boolean;
@@ -15,7 +14,6 @@ const Layout: FunctionComponent<Props> = ({
   children,
   title,
 }) => {
-  const { t } = useTranslation();
   const gridRowsStyle = useMemo(() => {
     if (hideHeader && hideFooter) {
       return "grid-rows-[1fr]";
@@ -70,7 +68,7 @@ const Layout: FunctionComponent<Props> = ({
                 <img className="w-8" src="/linkedin_icon.svg" />
               </a>
               <p className="text-right text-sm">
-                {t("section-footer.powered-by")}
+                Desarrollador por
                 <br />
                 ChiroTech
               </p>
