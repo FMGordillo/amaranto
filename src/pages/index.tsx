@@ -15,7 +15,7 @@ const FeatureImages: Record<Exclude<FeatureImage, undefined>, string> = {
 export default function Home() {
   const router = useRouter();
   const { status } = useSession();
-  const [currentImage, setCurrentImage] = useState<FeatureImage>();
+  const [currentImage, setCurrentImage] = useState<FeatureImage>('records');
 
   const handleFeatureHover = (image: Exclude<FeatureImage, undefined>) => {
     setCurrentImage(image);
@@ -33,7 +33,7 @@ export default function Home() {
         <>
           <header className="relative isolate flex h-96 items-center">
             <div className="absolute inset-0 bg-[url('/background.png')] bg-cover" />
-            <div className="container z-10 mx-auto pl-4 md:pl-8">
+            <div className="container flex gap-4 justify-evenly items-center z-10 mx-auto pl-4 md:pl-8">
               <h1 className="select-none">
                 <span className="bg-neutral-950/50 px-4 text-6xl font-bold text-white">
                   Amaranto
@@ -46,6 +46,9 @@ export default function Home() {
                   </span>
                 </span>
               </h1>
+              <div className="h-80 hidden md:block">
+                <img className="rounded-lg h-full" src="/doctor_and_patient.png" />
+              </div>
             </div>
           </header>
 
