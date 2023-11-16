@@ -60,7 +60,14 @@ const CreateRecord = forwardRef<HTMLDivElement, CreateRecordModalProps>(
             patientId: selectedPatient.id,
           },
           {
-            onSuccess: (data) => void onSubmit(data),
+            onSuccess: (data) => {
+              addNotification({
+                title: "Visita registrada",
+                type: "success",
+                message: "La visita fue registrada exitosamente"
+              });
+              void onSubmit(data)
+            },
             onSettled: () => void onClose(),
           },
         );
