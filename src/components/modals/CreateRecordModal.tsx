@@ -3,7 +3,7 @@ import { Combobox, Dialog, Transition } from "@headlessui/react";
 import { FormEvent, Fragment, forwardRef, useState } from "react";
 import invariant from "tiny-invariant";
 import { api } from "~/utils/api";
-import { useNotification } from "../Notification";
+import { useSnackbar } from "notistack";
 import useDebounce from "~/utils/useDebounce";
 import type { Patient } from "./CreatePatientModal";
 
@@ -24,7 +24,7 @@ type CreateRecordModalProps = {
 
 const CreateRecord = forwardRef<HTMLDivElement, CreateRecordModalProps>(
   ({ patient, onSubmit, onClose }, ref) => {
-    const addNotification = useNotification();
+    const { enqueueSnackbar } = useSnackbar();
     const [patientInput, setPatientInput] = useState("");
     const patientSearch = useDebounce(patientInput, 500);
     const [selectedPatient, setSelectedPatient] = useState<Patient | null>(
@@ -61,9 +61,8 @@ const CreateRecord = forwardRef<HTMLDivElement, CreateRecordModalProps>(
           },
           {
             onSuccess: (data) => {
-              addNotification({
-                title: "Visita registrada",
-                type: "success",
+              enqueueSnackbar({
+                variant: "success",
                 message: "La visita fue registrada exitosamente"
               });
               void onSubmit(data)
@@ -72,9 +71,8 @@ const CreateRecord = forwardRef<HTMLDivElement, CreateRecordModalProps>(
           },
         );
       } catch (error) {
-        addNotification({
-          title: "Error al crear visita",
-          type: "error",
+        enqueueSnackbar({
+          variant: "error",
           message: "Por favor, consulte con el administrador",
         });
         console.log(error);

@@ -45,7 +45,7 @@ const AppPage: NextPage = () => {
   return (
     <Layout>
       <AppLayout>
-        <h1 className="mb-4 text-2xl">Welcome, {data?.user.name}</h1>
+        <h1 className="mb-4 text-2xl">Hola, {data?.user.name}</h1>
         <div className="grid grid-flow-col gap-4">
           <Box action={() => setShowPatientModal(true)}>
             Crear nuevo paciente

@@ -14,6 +14,8 @@ export function createTables(sqliteTable: SQLiteTableFn) {
     id: text("id").notNull().primaryKey(),
     name: text("name"),
     email: text("email").notNull(),
+    role: text("role").default("doctor").notNull(),
+    stripeSubscriptionId: text("stripe_subscription_id"),
     emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
     image: text("image"),
   });
@@ -84,9 +86,7 @@ export function SQLiteDrizzleAdapter(
       );
     },
     getUserByEmail(data) {
-      const res =
-        client.select().from(users).where(eq(users.email, data)).get() ?? null;
-      return res;
+      return client.select().from(users).where(eq(users.email, data)).get() ?? null
     },
     createSession(data) {
       return client.insert(sessions).values(data).returning().get();

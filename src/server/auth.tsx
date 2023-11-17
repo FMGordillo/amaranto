@@ -50,6 +50,7 @@ export const LinkedinProvider = (
     name: profile.name as string,
     email: profile.email as string,
     image: profile.picture as string,
+    stripeSubscriptionId: null,
   }),
   wellKnown: "https://www.linkedin.com/oauth/.well-known/openid-configuration",
   authorization: {
@@ -78,15 +79,13 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
-      // ...other properties
-      // role: UserRole;
+      subscription: string | null;
     } & DefaultSession["user"];
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+  interface User {
+    stripeSubscriptionId: string | null;
+  }
 }
 
 /**
@@ -99,10 +98,11 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     session({ session, user }) {
       session.user.id = user.id;
+      session.user.subscription = user.stripeSubscriptionId;
       return session;
     },
-    jwt(all) {
-      return all.token;
+    jwt({ token }) {
+      return token;
     },
   },
   adapter: SQLiteDrizzleAdapter(db, sqliteTable),

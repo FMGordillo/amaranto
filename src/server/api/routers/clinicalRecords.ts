@@ -31,7 +31,7 @@ export const clinicalRecordsRouter = createTRPCRouter({
     .input(z.object({ page: z.string().default("1") }))
     .query(async ({ ctx, input }) => {
       const page = parseInt(input.page, 10);
-      const LIMIT = 5;
+      const LIMIT = 10;
 
       const [recordsCount] = await ctx.db
         .select({ count: sql<number>`count(*)` })
@@ -65,7 +65,7 @@ export const clinicalRecordsRouter = createTRPCRouter({
   getByPatient: protectedProcedure
     .input(z.object({ patientId: z.string(), page: z.number().default(1) }))
     .query(async ({ ctx, input }) => {
-      const LIMIT = 5;
+      const LIMIT = 10;
 
       const totalRecordsQuery = await ctx.db.run(
         sql`SELECT COUNT(*) as total from ${clinicalRecords}  WHERE ${clinicalRecords.patientId} = ${input.patientId}`,

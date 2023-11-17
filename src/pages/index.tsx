@@ -144,18 +144,17 @@ export default function Home() {
                     </li>
                   </ul>
                 </div>
-                <a
+                <button
                   className="mx-8 mt-4 rounded-full bg-purple-300 py-2 text-center font-semibold hover:bg-purple-400"
-                  onClick={() => void signIn()}
-                  href="https://share-eu1.hsforms.com/1QL5wqKPmRj2mNUIpLrEItg2dasdu"
-                  target="_blank"
-                  rel="noreferrer noopener"
+                  onClick={() => void signIn(undefined, {
+                    callbackUrl: '/subscribe?plan=basic',
+                  })}
                 >
                   Registrame a la beta{" "}
                   <span role="img" aria-label="memo">
                     📝
                   </span>
-                </a>
+                </button>
               </div>
 
               <div className="grid-cols[120px-auto-120px] grid max-w-sm gap-8 rounded-lg  pb-8 shadow-lg ring-fuchsia-700 transition-all hover:ring md:w-1/3">
@@ -178,8 +177,15 @@ export default function Home() {
                     <span>Potenciado con Inteligencia Artificial</span>
                   </p>
                 </div>
-                <button className="mx-8 rounded-full bg-fuchsia-400 py-2 font-semibold hover:bg-fuchsia-500">
-                  <span>Próximamente</span>
+
+                <button
+                  className="mx-8 mt-4 rounded-full bg-fuchsia-400 py-2 text-center font-semibold hover:bg-fuchsia-500"
+                  aria-disabled="true"
+                // onClick={() => void signIn(undefined, {
+                //   callbackUrl: '/subscribe?plan=pro',
+                // })}
+                >
+                  Registrame a Plus<br />(proximamente)
                 </button>
               </div>
 

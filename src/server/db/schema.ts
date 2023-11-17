@@ -67,6 +67,8 @@ export const users = sqliteTable("user", {
   name: text("name"),
   email: text("email").notNull(),
   role: text("role").default("doctor").notNull(),
+  // from stripe
+  stripeSubscriptionId: text("stripe_subscription_id"),
   emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
   image: text("image"),
 });

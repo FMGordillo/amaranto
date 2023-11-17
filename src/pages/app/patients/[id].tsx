@@ -1,14 +1,16 @@
 import { Transition } from "@headlessui/react";
-import {
+import type {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
   NextPage,
 } from "next";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import invariant from "tiny-invariant";
 import AppLayout from "~/components/AppLayout";
 import Layout from "~/components/Layout";
-import { useNotification } from "~/components/Notification";
+import { useSnackbar } from "notistack";
+import Pagination from "~/components/Pagination";
 import CreateRecordModal from "~/components/modals/CreateRecordModal";
 import { env } from "~/env.mjs";
 import { api } from "~/utils/api";
@@ -16,16 +18,21 @@ import { api } from "~/utils/api";
 const PatientPageById: NextPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = (props) => {
-  const addNotification = useNotification();
+  const { enqueueSnackbar } = useSnackbar();
+  const params = useSearchParams();
+
   const [loadingBrief, setLoadingBrief] = useState(false);
   const [summary, setSummary] = useState<string | undefined>();
   const [openCreateRecordModal, setOpenCreateRecordModal] = useState(false);
+
+  const page = params.get("page") ?? "1";
+
   const { refetch, isLoading, data } = api.patients.getPatientById.useQuery(
-    props.patientId!,
+    { id: props.patientId!, page },
   );
 
-  const patient = data?.[0]?.patients;
-  const hasClinicalRecords = data && data?.length > 1;
+  const patient = data?.clinicalRecords[0]?.patients;
+  const hasClinicalRecords = data && data.totalRecords > 0 && data.clinicalRecords[0]?.clinicalRecords;
 
   const handleRecordCreate = () => {
     setOpenCreateRecordModal(false);
@@ -51,15 +58,14 @@ const PatientPageById: NextPage<
       const responseText = await response.text();
       setSummary(responseText);
 
-      addNotification({
-        type: "success",
+      enqueueSnackbar({
+        variant: "success",
         message: "Resumen generador exitosamente",
       });
     } catch (error) {
       console.log(error);
-      addNotification({
-        title: "Error",
-        type: "error",
+      enqueueSnackbar({
+        variant: "error",
         message: "Error al generar resumen",
       });
     } finally {
@@ -117,20 +123,29 @@ const PatientPageById: NextPage<
         </Transition>
 
         {!isLoading && hasClinicalRecords && (
-          <ul className="flex flex-col gap-4">
-            {data.map(({ clinicalRecords }) => (
-              <li className="bg-fuchsia-50" key={clinicalRecords?.id}>
-                <blockquote className="max-w-prose whitespace-pre-line">
-                  {clinicalRecords?.message}
-                </blockquote>
+          <>
+            <ul className="flex flex-col gap-4 mb-8">
+              {data.clinicalRecords.map(({ clinicalRecords }) => (
+                <li className="p-4 mx-auto w-full max-w-prose rounded-lg bg-fuchsia-50" key={clinicalRecords?.id}>
+                  <blockquote className="whitespace-pre-line break-words">
+                    {clinicalRecords?.message}
+                  </blockquote>
 
-                <p className="font-light">
-                  Fecha de creación:{" "}
-                  {clinicalRecords?.createdAt.toLocaleString()}
-                </p>
-              </li>
-            ))}
-          </ul>
+                  <p className="font-light">
+                    Fecha de creación:{" "}
+                    {clinicalRecords?.createdAt.toLocaleString()}
+                  </p>
+                </li>
+              ))}
+            </ul>
+
+            <Pagination
+              visiblePages={data?.visiblePages}
+              hasPreviousPage={data?.hasPreviousPage}
+              hasNextPage={data?.hasNextPage}
+              pages={data.pages}
+            />
+          </>
         )}
 
         <CreateRecordModal

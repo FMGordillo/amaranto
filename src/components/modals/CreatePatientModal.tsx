@@ -2,7 +2,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { type FormEvent, Fragment } from "react";
 import invariant from "tiny-invariant";
 import { api } from "~/utils/api";
-import { useNotification } from "../Notification";
+import { useSnackbar } from "notistack";
 
 export type Patient = {
   name: string;
@@ -23,7 +23,7 @@ export default function CreatePatientModal({
   onClose,
   open,
 }: CreatePatientModalProps) {
-  const addNotification = useNotification();
+  const { enqueueSnackbar } = useSnackbar();
   const { mutate: createPatient } = api.patients.createPatient.useMutation();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -38,18 +38,16 @@ export default function CreatePatientModal({
       void createPatient(name.toString(), {
         onSuccess: (data) => {
           void onSubmit(data);
-          addNotification({
-            title: "Exito",
-            type: "success",
+          enqueueSnackbar({
+            variant: "success",
             message: "Paciente creado correctamente",
           });
           onClose();
         },
       });
     } catch (error) {
-      addNotification({
-        type: "error",
-        title: "Error",
+      enqueueSnackbar({
+        variant: "error",
         message: "Por favor, consulte con el administrador del sistema",
       });
       console.log(error);

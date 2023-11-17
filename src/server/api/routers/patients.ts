@@ -6,14 +6,36 @@ import { getPagination } from "~/utils/db";
 
 export const patientsRouter = createTRPCRouter({
   getPatientById: protectedProcedure
-    .input(z.string())
-    .query(({ input, ctx }) => {
-      return ctx.db
+    .input(z.object({ page: z.string().default("1"), id: z.string() }))
+    .query(async ({ input, ctx }) => {
+      const page = parseInt(input.page, 10);
+      const LIMIT = 10;
+
+      const totalRecordsQuery = await ctx.db.run(
+        sql`SELECT COUNT(*) as total from ${patients} LEFT JOIN ${clinicalRecords} ON ${patients.id} = ${clinicalRecords.patientId}  WHERE ${patients.id} = ${input.id}`,
+      );
+      const totalRecords = totalRecordsQuery.rows[0]?.total as number;
+
+      const { offset, ...paginationData } = getPagination({
+        page,
+        limit: LIMIT,
+        total: totalRecords,
+      });
+
+      const clinicalRecordsData = await ctx.db
         .select()
         .from(patients)
-        .leftJoin(clinicalRecords, eq(clinicalRecords.patientId, input))
-        .where(eq(patients.id, input))
-        .orderBy(desc(clinicalRecords.createdAt));
+        .leftJoin(clinicalRecords, eq(clinicalRecords.patientId, input.id))
+        .where(eq(patients.id, input.id))
+        .orderBy(desc(clinicalRecords.createdAt))
+        .limit(LIMIT)
+        .offset(offset)
+
+      return {
+        ...paginationData,
+        clinicalRecords: clinicalRecordsData,
+        totalRecords,
+      };
     }),
 
   getPatientBySearch: protectedProcedure
@@ -34,7 +56,7 @@ export const patientsRouter = createTRPCRouter({
     .input(z.object({ page: z.string().default("1") }))
     .query(async ({ input, ctx }) => {
       const page = parseInt(input.page, 10);
-      const LIMIT = 5;
+      const LIMIT = 10;
 
       const [patientsCount] = await ctx.db
         .select({ count: sql<number>`count(*)` })

@@ -66,11 +66,10 @@ const Patients = () => {
                   data.patients.map((patient) => (
                     <tr
                       key={patient?.id}
-                      className={`hover:cursor-pointer hover:bg-fuchsia-50 ${
-                        patient?.id === patientId
-                          ? "bg-fuchsia-200"
-                          : "bg-transparent"
-                      }`}
+                      className={`hover:cursor-pointer hover:bg-fuchsia-50 ${patient?.id === patientId
+                        ? "bg-fuchsia-200"
+                        : "bg-transparent"
+                        }`}
                       onClick={() => handlePatientClick(patient?.id)}
                     >
                       <td className="flex justify-between whitespace-nowrap px-6 py-4 underline-offset-4 transition-all">
@@ -84,7 +83,7 @@ const Patients = () => {
               visiblePages={data?.visiblePages}
               hasPreviousPage={data?.hasPreviousPage}
               hasNextPage={data?.hasNextPage}
-              pages={data.pages}
+              pages={data?.pages}
             />
           </>
         )}

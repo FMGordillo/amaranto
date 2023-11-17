@@ -20,7 +20,7 @@ export default function Header() {
           <div>
             <button
               className="inline-flex w-full justify-center rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 motion-safe:animate-pulse"
-              onClick={() => void signIn()}
+              onClick={() => void signIn(undefined, { callbackUrl: '/subscribe' })}
             >
               Iniciar sesión 📝
             </button>
@@ -29,7 +29,7 @@ export default function Header() {
           <Menu as="div" className="relative inline-block text-left">
             <div>
               <Menu.Button className="inline-flex w-full justify-center rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-                {session ? `Hola, ${session.user.name}` : "Iniciar sesión"}
+                {session ? `Hola, ${session.user.name ?? session.user.email}` : "Iniciar sesión"}
               </Menu.Button>
             </div>
             <Transition

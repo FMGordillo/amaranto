@@ -109,8 +109,7 @@ export const publicProcedure = t.procedure;
 
 /** Reusable middleware that enforces users are logged in before running the procedure. */
 const enforceUserIsAuthed = t.middleware(async ({ ctx, next, ...rest }) => {
-  console.log("haber", ctx, rest);
-  if (!ctx.session?.user) {
+  if (!ctx.session?.user || !ctx.session.user.subscription) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
   return next({
