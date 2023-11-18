@@ -7,6 +7,9 @@ await import("./src/env.mjs");
 
 const config = {
   reactStrictMode: true,
+  experimental: {
+    serverComponentsExternalPackages: ["libsql"],
+  },
 };
 
 export default withAxiom(config);
