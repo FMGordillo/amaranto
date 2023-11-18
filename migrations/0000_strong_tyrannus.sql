@@ -44,6 +44,7 @@ CREATE TABLE `amaranto_user` (
 	`name` text,
 	`email` text NOT NULL,
 	`role` text DEFAULT 'doctor' NOT NULL,
+	`stripe_subscription_id` text,
 	`emailVerified` integer,
 	`image` text
 );

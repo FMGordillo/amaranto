@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "d0f028a0-489f-44ae-b3e7-cad6dc50f82c",
+  "id": "4be46856-3835-4c04-bcdc-e62795a70d1c",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "amaranto_account": {
@@ -306,6 +306,13 @@
           "notNull": true,
           "autoincrement": false,
           "default": "'doctor'"
+        },
+        "stripe_subscription_id": {
+          "name": "stripe_subscription_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         },
         "emailVerified": {
           "name": "emailVerified",
