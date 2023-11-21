@@ -1,6 +1,5 @@
 import { NextPage } from "next";
 import { useParams } from "next/navigation";
-import { Suspense } from "react";
 import AppLayout from "~/components/AppLayout";
 import Layout from "~/components/Layout";
 import { api } from "~/utils/api";

@@ -1,11 +1,9 @@
 import {
-  GetServerSideProps,
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
   NextPage,
 } from "next";
 import { getServerSession } from "next-auth";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { env } from "~/env.mjs";
 import { authOptions } from "~/server/auth";
@@ -13,7 +11,6 @@ import { authOptions } from "~/server/auth";
 const SubscribePage: NextPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = (props) => {
-  const router = useRouter();
   const [isFetching, setIsFetching] = useState(false);
 
   useEffect(() => {
@@ -87,7 +84,7 @@ export const getServerSideProps = async (
   return {
     props: {
       redirectToStripe: true,
-      plan,
+      plan: plan ?? null,
       userId: session.user.id,
     },
   };

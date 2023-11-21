@@ -1,11 +1,88 @@
-// eslint-disable
 import { Combobox, Dialog, Transition } from "@headlessui/react";
-import { FormEvent, Fragment, forwardRef, useState } from "react";
+import { FormEvent, Fragment, FunctionComponent, forwardRef, useCallback, useEffect, useState } from "react";
 import invariant from "tiny-invariant";
 import { api } from "~/utils/api";
 import { useSnackbar } from "notistack";
 import useDebounce from "~/utils/useDebounce";
 import type { Patient } from "./CreatePatientModal";
+import { LexicalComposer } from '@lexical/react/LexicalComposer';
+import { ContentEditable } from '@lexical/react/LexicalContentEditable';
+import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
+import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
+import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { $getSelection, COMMAND_PRIORITY_CRITICAL, FORMAT_TEXT_COMMAND, SELECTION_CHANGE_COMMAND } from "lexical";
+
+const IS_APPLE = false;
+
+const ToolbarEditor: FunctionComponent = () => {
+  const [editor] = useLexicalComposerContext();
+  const [activeEditor, setActiveEditor] = useState(editor);
+  const [isBold, setIsBold] = useState(false);
+  const [isItalic, setIsItalic] = useState(false);
+
+  const $updateToolbar = useCallback(() => {
+    const selection = $getSelection();
+    if (selection) {
+      setIsBold(selection.hasFormat('bold'));
+      setIsItalic(selection.hasFormat('italic'));
+    }
+  }, [activeEditor]);
+
+  useEffect(() => {
+    return editor.registerCommand(
+      SELECTION_CHANGE_COMMAND,
+      (_payload, newEditor) => {
+        $updateToolbar();
+        setActiveEditor(newEditor);
+        return false;
+      },
+      COMMAND_PRIORITY_CRITICAL,
+    );
+  }, [editor, $updateToolbar]);
+
+  return (
+    <div>
+      <button
+        onClick={() => {
+          activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold');
+        }}
+        className={'w-8 h-8 border bg-slate-200 ' + (isBold ? 'font-bold' : '')}
+        title={IS_APPLE ? 'Bold (⌘B)' : 'Bold (Ctrl+B)'}
+        type="button"
+        aria-label={`Format text as bold. Shortcut: ${IS_APPLE ? '⌘B' : 'Ctrl+B'
+          }`}>
+        <i>B</i>
+      </button>
+
+      <button
+        onClick={() => {
+          activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic');
+        }}
+        className={'toolbar-item spaced ' + (isItalic ? 'active' : '')}
+        title={IS_APPLE ? 'Italic (⌘I)' : 'Italic (Ctrl+I)'}
+        type="button"
+        aria-label={`Format text as italics. Shortcut: ${IS_APPLE ? '⌘I' : 'Ctrl+I'
+          }`}>
+        <i className="format italic" />
+      </button>
+    </div>
+  )
+}
+
+const theme = {
+  // Theme styling goes here
+}
+
+function onError(error: Error) {
+  throw error;
+}
+
+const initialConfig = {
+  namespace: 'MyEditor',
+  theme,
+  onError,
+};
 
 export type ClinicalRecord = {
   message: string;
@@ -82,7 +159,7 @@ const CreateRecord = forwardRef<HTMLDivElement, CreateRecordModalProps>(
     return (
       <Dialog.Panel
         ref={ref}
-        className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+        className="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
       >
         <Dialog.Title
           as="h3"
@@ -91,10 +168,13 @@ const CreateRecord = forwardRef<HTMLDivElement, CreateRecordModalProps>(
           Create a new clinical record
         </Dialog.Title>
         <div className="mt-2">
+
           <form
+            className="flex flex-col gap-4"
             aria-disabled={createClinicalRecord.isLoading}
             onSubmit={(e) => void handleSubmit(e)}
           >
+
             <div className="mb-4">
               <label
                 htmlFor="recordDescription"
@@ -102,57 +182,69 @@ const CreateRecord = forwardRef<HTMLDivElement, CreateRecordModalProps>(
               >
                 Record Description
               </label>
-              <textarea
-                id="recordDescription"
-                name="message"
-                className="focus:ring-primary-color w-full rounded-lg border px-4 py-2 focus:ring"
-                rows={4}
-                required
-              ></textarea>
-            </div>
 
-            <div className="mb-4">
-              <label
-                htmlFor="patientInput"
-                className="mb-2 block text-sm font-medium text-gray-600"
-              >
-                Nombre del paciente{" "}
-              </label>
-              <Combobox
-                value={selectedPatient}
-                disabled={!!patient}
-                onChange={handleOptionSelect}
-              >
-                <Combobox.Input
-                  required
-                  id="patientInput"
-                  aria-disabled={!!patient}
-                  className={`focus:ring-primary-color w-full rounded-lg border px-4 py-2 focus:ring ${patient ? "bg-gray-300" : ""
-                    }`}
-                  onChange={(event) => setPatientInput(event.target.value)}
-                  displayValue={(p: Patient | undefined) => (p ? p.name : "")}
+              <LexicalComposer initialConfig={initialConfig}>
+                <ToolbarEditor />
+                <AutoFocusPlugin />
+                <RichTextPlugin
+                  contentEditable={<ContentEditable
+                    id="recordDescription"
+                    name="message"
+                    required
+                    className="border p-2 h-32 resize-y rounded-lg" />}
+                  placeholder={<div>Enter some text...</div>}
+                  ErrorBoundary={LexicalErrorBoundary}
                 />
-                <Combobox.Options className="bg-white">
-                  {patientSearchResult.data?.map((patient) => (
-                    <Combobox.Option
-                      className="bg-gray-100 px-8 py-4 hover:cursor-pointer hover:bg-gray-200"
-                      key={patient.id}
-                      value={patient}
-                    >
-                      {patient.name}
-                    </Combobox.Option>
-                  ))}
-                </Combobox.Options>
-              </Combobox>
+              </LexicalComposer>
             </div>
 
-            <button
-              aria-disabled={createClinicalRecord.isLoading}
-              type="submit"
-              className="rounded-lg bg-fuchsia-700 px-4 py-2 text-white hover:bg-pink-600"
-            >
-              Create Record
-            </button>
+              <div className="mb-4">
+                <label
+                  htmlFor="patientInput"
+                  className="mb-2 block text-sm font-medium text-gray-600"
+                >
+                  Nombre del paciente{" "}
+                </label>
+                <Combobox
+                  value={selectedPatient}
+                  disabled={!!patient}
+                  onChange={handleOptionSelect}
+                >
+                <div className="relative">
+                  <Combobox.Input
+                    required
+                    id="patientInput"
+                    aria-disabled={!!patient}
+                    className={`focus:ring-primary-color w-full rounded-lg border px-4 py-2 focus:ring ${patient ? "bg-gray-300" : ""
+                      }`}
+                    onChange={(event) => setPatientInput(event.target.value)}
+                    displayValue={(p: Patient | undefined) => (p ? p.name : "")}
+                  />
+
+                {patientSearchResult.isFetching && <img className="absolute inset-y-2 w-6 animate-spin right-1" src="/loading.svg" />}
+                </div>
+                
+                  <Combobox.Options className="bg-white">
+                    {patientSearchResult.data?.map((patient) => (
+                      <Combobox.Option
+                        className="bg-gray-100 px-8 py-4 hover:cursor-pointer hover:bg-gray-200"
+                        key={patient.id}
+                        value={patient}
+                      >
+                        {patient.name}
+                      </Combobox.Option>
+                    ))}
+                  </Combobox.Options>
+                </Combobox>
+              </div>
+
+              <button
+                aria-disabled={createClinicalRecord.isLoading}
+                type="submit"
+                className="self-end rounded-lg bg-fuchsia-700 px-4 py-2 text-white hover:bg-pink-600"
+              >
+                Create Record
+              </button>
           </form>
         </div>
       </Dialog.Panel>
