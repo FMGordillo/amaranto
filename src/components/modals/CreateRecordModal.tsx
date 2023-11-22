@@ -1,31 +1,69 @@
-import { Combobox, Dialog, Transition } from "@headlessui/react";
-import { FormEvent, Fragment, FunctionComponent, forwardRef, useCallback, useEffect, useState } from "react";
+import { Combobox, Dialog, Transition } from "@headlessui/react"; import { FormEvent, Fragment, FunctionComponent, forwardRef, useCallback, useEffect, useState } from "react";
 import invariant from "tiny-invariant";
 import { api } from "~/utils/api";
 import { useSnackbar } from "notistack";
 import useDebounce from "~/utils/useDebounce";
 import type { Patient } from "./CreatePatientModal";
-import { LexicalComposer } from '@lexical/react/LexicalComposer';
+import {
+  mergeRegister,
+} from '@lexical/utils';
+import { InitialConfigType, LexicalComposer } from '@lexical/react/LexicalComposer';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
+import { createEmptyHistoryState, HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { $getSelection, COMMAND_PRIORITY_CRITICAL, FORMAT_TEXT_COMMAND, SELECTION_CHANGE_COMMAND } from "lexical";
+import { $getSelection, CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_CRITICAL, EditorState, FORMAT_TEXT_COMMAND, LexicalEditor, REDO_COMMAND, SELECTION_CHANGE_COMMAND, UNDO_COMMAND } from "lexical";
+import {
+  $convertToMarkdownString,
+  TRANSFORMERS,
+} from '@lexical/markdown';
+import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
+import { HorizontalRulePlugin } from '@lexical/react/LexicalHorizontalRulePlugin';
+import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin'
 
-const IS_APPLE = false;
+export const CAN_USE_DOM: boolean =
+  typeof window !== 'undefined' &&
+  typeof window.document !== 'undefined' &&
+  typeof window.document.createElement !== 'undefined';
 
-const ToolbarEditor: FunctionComponent = () => {
+const IS_APPLE: boolean =
+  CAN_USE_DOM && /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+
+// const ParserPlugin: FunctionComponent<{ setParsedContent?: Function }> = ({ setParsedContent }) => { const [editor] = useLexicalComposerContext();
+//
+//   useEffect(() => {
+//     const state = editor.getEditorState()
+//     const markdown = $convertToMarkdownString(TRANSFORMERS);
+//     console.log(markdown)
+//   }, [editor])
+//
+//   return null;
+// }
+
+const ToolbarPlugin: FunctionComponent = () => {
   const [editor] = useLexicalComposerContext();
   const [activeEditor, setActiveEditor] = useState(editor);
+
+  const [isEditable, setIsEditable] = useState(true);
+
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
+  const [isSubrayar, setIsUnderline] = useState(false);
+
+  const [canUndo, setCanUndo] = useState(false);
+  const [canRedo, setCanRedo] = useState(false);
 
   const $updateToolbar = useCallback(() => {
     const selection = $getSelection();
     if (selection) {
+      // @ts-ignore
       setIsBold(selection.hasFormat('bold'));
+      // @ts-ignore
       setIsItalic(selection.hasFormat('italic'));
+      // @ts-ignore
+      setIsUnderline(selection.hasFormat('underline'));
     }
   }, [activeEditor]);
 
@@ -41,14 +79,70 @@ const ToolbarEditor: FunctionComponent = () => {
     );
   }, [editor, $updateToolbar]);
 
+  useEffect(() => {
+    return mergeRegister(
+      editor.registerEditableListener((editable) => {
+        setIsEditable(editable);
+      }),
+      activeEditor.registerUpdateListener(({ editorState }) => {
+        editorState.read(() => {
+          $updateToolbar();
+        });
+      }),
+      activeEditor.registerCommand<boolean>(
+        CAN_UNDO_COMMAND,
+        (payload) => {
+          setCanUndo(payload);
+          return false;
+        },
+        COMMAND_PRIORITY_CRITICAL,
+      ),
+      activeEditor.registerCommand<boolean>(
+        CAN_REDO_COMMAND,
+        (payload) => {
+          setCanRedo(payload);
+          return false;
+        },
+        COMMAND_PRIORITY_CRITICAL,
+      ),
+    );
+  }, [$updateToolbar, activeEditor, editor]);
+
   return (
-    <div>
+    <div className="flex mb-1">
       <button
+        disabled={!canUndo || !isEditable}
+        onClick={() => {
+          activeEditor.dispatchCommand(UNDO_COMMAND, undefined);
+        }}
+        title={IS_APPLE ? 'Undo (⌘Z)' : 'Undo (Ctrl+Z)'}
+        type="button"
+        className={'w-8 h-8 border-slate-700 bg-slate-200 ' + (canUndo ? '' : 'text-gray-600')}
+        aria-label="Undo">
+        <i>U</i>
+      </button>
+
+      <button
+        disabled={!canRedo || !isEditable}
+        onClick={() => {
+          activeEditor.dispatchCommand(REDO_COMMAND, undefined);
+        }}
+        title={IS_APPLE ? 'Redo (⌘Y)' : 'Redo (Ctrl+Y)'}
+        type="button"
+        className={'w-8 h-8 border-slate-700 bg-slate-200 ' + (canRedo ? '' : 'text-gray-600')}
+        aria-label="Redo">
+        <i>R</i>
+      </button>
+
+      <span className="px-2">|</span>
+
+      <button
+        disabled={!isEditable}
         onClick={() => {
           activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold');
         }}
-        className={'w-8 h-8 border bg-slate-200 ' + (isBold ? 'font-bold' : '')}
-        title={IS_APPLE ? 'Bold (⌘B)' : 'Bold (Ctrl+B)'}
+        className={'w-8 h-8 border-slate-700 bg-slate-200 ' + (isBold ? 'font-bold border-2' : '')}
+        title={IS_APPLE ? 'Negrita (⌘B)' : 'Negrita (Ctrl+B)'}
         type="button"
         aria-label={`Format text as bold. Shortcut: ${IS_APPLE ? '⌘B' : 'Ctrl+B'
           }`}>
@@ -56,15 +150,29 @@ const ToolbarEditor: FunctionComponent = () => {
       </button>
 
       <button
+        disabled={!isEditable}
         onClick={() => {
           activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic');
         }}
-        className={'toolbar-item spaced ' + (isItalic ? 'active' : '')}
-        title={IS_APPLE ? 'Italic (⌘I)' : 'Italic (Ctrl+I)'}
+        className={'w-8 h-8 border-slate-700 bg-slate-200 ' + (isItalic ? 'font-bold border-2' : '')}
+        title={IS_APPLE ? 'Cursiva (⌘I)' : 'Cursiva (Ctrl+I)'}
         type="button"
         aria-label={`Format text as italics. Shortcut: ${IS_APPLE ? '⌘I' : 'Ctrl+I'
           }`}>
-        <i className="format italic" />
+        <i>I</i>
+      </button>
+
+      <button
+        disabled={!isEditable}
+        onClick={() => {
+          activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline');
+        }}
+        className={'w-8 h-8 border-slate-700 bg-slate-200 ' + (isSubrayar ? 'font-bold border-2' : '')}
+        title={IS_APPLE ? 'Subrayar (⌘U)' : 'Underline (Ctrl+U)'}
+        type="button"
+        aria-label={`Format text to underlined. Shortcut: ${IS_APPLE ? '⌘U' : 'Ctrl+U'
+          }`}>
+        <i>S</i>
       </button>
     </div>
   )
@@ -78,7 +186,7 @@ function onError(error: Error) {
   throw error;
 }
 
-const initialConfig = {
+const initialConfig: InitialConfigType = {
   namespace: 'MyEditor',
   theme,
   onError,
@@ -102,7 +210,10 @@ type CreateRecordModalProps = {
 const CreateRecord = forwardRef<HTMLDivElement, CreateRecordModalProps>(
   ({ patient, onSubmit, onClose }, ref) => {
     const { enqueueSnackbar } = useSnackbar();
+    const [historyState] = useState(() => createEmptyHistoryState());
+
     const [patientInput, setPatientInput] = useState("");
+    const [content, setContent] = useState("");
     const patientSearch = useDebounce(patientInput, 500);
     const [selectedPatient, setSelectedPatient] = useState<Patient | null>(
       patient ?? null,
@@ -123,17 +234,15 @@ const CreateRecord = forwardRef<HTMLDivElement, CreateRecordModalProps>(
       try {
         e.preventDefault();
 
+
         if (createClinicalRecord.isLoading) return;
 
-        const data = new FormData(e.currentTarget as HTMLFormElement);
-
-        const message = data.get("message");
-        invariant(message, "Message should be defined");
-        invariant(!!selectedPatient, "Select a patient");
+        invariant(content, "El contenido debe estar definido");
+        invariant(!!selectedPatient, "Seleccione un paciente");
 
         void createClinicalRecord.mutate(
           {
-            message: message.toString(),
+            message: content,
             patientId: selectedPatient.id,
           },
           {
@@ -155,6 +264,13 @@ const CreateRecord = forwardRef<HTMLDivElement, CreateRecordModalProps>(
         console.log(error);
       }
     };
+
+    const handleFormChange = (editorState: EditorState) => {
+      editorState.read(() => {
+        const currentContent = $convertToMarkdownString(TRANSFORMERS)
+        setContent(currentContent)
+      })
+    }
 
     return (
       <Dialog.Panel
@@ -184,32 +300,33 @@ const CreateRecord = forwardRef<HTMLDivElement, CreateRecordModalProps>(
               </label>
 
               <LexicalComposer initialConfig={initialConfig}>
-                <ToolbarEditor />
+
+                <ToolbarPlugin />
                 <AutoFocusPlugin />
+                <HistoryPlugin externalHistoryState={historyState} />
+                <OnChangePlugin onChange={handleFormChange} />
                 <RichTextPlugin
                   contentEditable={<ContentEditable
                     id="recordDescription"
-                    name="message"
-                    required
-                    className="border p-2 h-32 resize-y rounded-lg" />}
-                  placeholder={<div>Enter some text...</div>}
+                    className="overflow-y-auto border border-slate-700 p-2 h-32 resize-y rounded-lg" />}
+                  placeholder={<div />}
                   ErrorBoundary={LexicalErrorBoundary}
                 />
               </LexicalComposer>
             </div>
 
-              <div className="mb-4">
-                <label
-                  htmlFor="patientInput"
-                  className="mb-2 block text-sm font-medium text-gray-600"
-                >
-                  Nombre del paciente{" "}
-                </label>
-                <Combobox
-                  value={selectedPatient}
-                  disabled={!!patient}
-                  onChange={handleOptionSelect}
-                >
+            <div className="mb-4">
+              <label
+                htmlFor="patientInput"
+                className="mb-2 block text-sm font-medium text-gray-600"
+              >
+                Nombre del paciente{" "}
+              </label>
+              <Combobox
+                value={selectedPatient}
+                disabled={!!patient}
+                onChange={handleOptionSelect}
+              >
                 <div className="relative">
                   <Combobox.Input
                     required
@@ -221,30 +338,30 @@ const CreateRecord = forwardRef<HTMLDivElement, CreateRecordModalProps>(
                     displayValue={(p: Patient | undefined) => (p ? p.name : "")}
                   />
 
-                {patientSearchResult.isFetching && <img className="absolute inset-y-2 w-6 animate-spin right-1" src="/loading.svg" />}
+                  {patientSearchResult.isFetching && <img className="absolute inset-y-2 w-6 animate-spin right-1" src="/loading.svg" />}
                 </div>
-                
-                  <Combobox.Options className="bg-white">
-                    {patientSearchResult.data?.map((patient) => (
-                      <Combobox.Option
-                        className="bg-gray-100 px-8 py-4 hover:cursor-pointer hover:bg-gray-200"
-                        key={patient.id}
-                        value={patient}
-                      >
-                        {patient.name}
-                      </Combobox.Option>
-                    ))}
-                  </Combobox.Options>
-                </Combobox>
-              </div>
 
-              <button
-                aria-disabled={createClinicalRecord.isLoading}
-                type="submit"
-                className="self-end rounded-lg bg-fuchsia-700 px-4 py-2 text-white hover:bg-pink-600"
-              >
-                Create Record
-              </button>
+                <Combobox.Options className="bg-white">
+                  {patientSearchResult.data?.map((patient) => (
+                    <Combobox.Option
+                      className="bg-gray-100 px-8 py-4 hover:cursor-pointer hover:bg-gray-200"
+                      key={patient.id}
+                      value={patient}
+                    >
+                      {patient.name}
+                    </Combobox.Option>
+                  ))}
+                </Combobox.Options>
+              </Combobox>
+            </div>
+
+            <button
+              aria-disabled={createClinicalRecord.isLoading}
+              type="submit"
+              className="self-end rounded-lg bg-fuchsia-700 px-4 py-2 text-white hover:bg-pink-600"
+            >
+              Create Record
+            </button>
           </form>
         </div>
       </Dialog.Panel>
