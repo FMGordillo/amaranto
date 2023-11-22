@@ -14,13 +14,11 @@ import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
 import { createEmptyHistoryState, HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { $getSelection, CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_CRITICAL, EditorState, FORMAT_TEXT_COMMAND, LexicalEditor, REDO_COMMAND, SELECTION_CHANGE_COMMAND, UNDO_COMMAND } from "lexical";
+import { $getSelection, CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_CRITICAL, EditorState, FORMAT_TEXT_COMMAND, GridSelection, LexicalEditor, NodeSelection, REDO_COMMAND, RangeSelection, SELECTION_CHANGE_COMMAND, UNDO_COMMAND } from "lexical";
 import {
   $convertToMarkdownString,
   TRANSFORMERS,
 } from '@lexical/markdown';
-import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
-import { HorizontalRulePlugin } from '@lexical/react/LexicalHorizontalRulePlugin';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin'
 
 export const CAN_USE_DOM: boolean =
@@ -30,17 +28,6 @@ export const CAN_USE_DOM: boolean =
 
 const IS_APPLE: boolean =
   CAN_USE_DOM && /Mac|iPod|iPhone|iPad/.test(navigator.platform);
-
-// const ParserPlugin: FunctionComponent<{ setParsedContent?: Function }> = ({ setParsedContent }) => { const [editor] = useLexicalComposerContext();
-//
-//   useEffect(() => {
-//     const state = editor.getEditorState()
-//     const markdown = $convertToMarkdownString(TRANSFORMERS);
-//     console.log(markdown)
-//   }, [editor])
-//
-//   return null;
-// }
 
 const ToolbarPlugin: FunctionComponent = () => {
   const [editor] = useLexicalComposerContext();
@@ -56,15 +43,14 @@ const ToolbarPlugin: FunctionComponent = () => {
   const [canRedo, setCanRedo] = useState(false);
 
   const $updateToolbar = useCallback(() => {
-    const selection = $getSelection();
+    const selection = $getSelection() as RangeSelection;
+
     if (selection) {
-      // @ts-ignore
       setIsBold(selection.hasFormat('bold'));
-      // @ts-ignore
       setIsItalic(selection.hasFormat('italic'));
-      // @ts-ignore
       setIsUnderline(selection.hasFormat('underline'));
     }
+
   }, [activeEditor]);
 
   useEffect(() => {
@@ -111,7 +97,7 @@ const ToolbarPlugin: FunctionComponent = () => {
   return (
     <div className="flex mb-1">
       <button
-        disabled={!canUndo || !isEditable}
+        disabled={!canUndo ?? !isEditable}
         onClick={() => {
           activeEditor.dispatchCommand(UNDO_COMMAND, undefined);
         }}
@@ -123,7 +109,7 @@ const ToolbarPlugin: FunctionComponent = () => {
       </button>
 
       <button
-        disabled={!canRedo || !isEditable}
+        disabled={!canRedo ?? !isEditable}
         onClick={() => {
           activeEditor.dispatchCommand(REDO_COMMAND, undefined);
         }}
