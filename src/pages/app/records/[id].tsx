@@ -2,6 +2,7 @@ import { NextPage } from "next";
 import { useParams } from "next/navigation";
 import AppLayout from "~/components/AppLayout";
 import Layout from "~/components/Layout";
+import Record from "~/components/Record";
 import { api } from "~/utils/api";
 
 const RecordByIdPage: NextPage = () => {
@@ -23,7 +24,7 @@ const RecordByIdPage: NextPage = () => {
             </h1>
 
             <blockquote className="max-w-prose whitespace-pre-line">
-              {data[0]?.clinicalRecords.message}
+              <Record content={data[0]?.clinicalRecords.message} />
             </blockquote>
 
             <p className="font-light">

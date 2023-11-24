@@ -14,6 +14,7 @@ import Pagination from "~/components/Pagination";
 import CreateRecordModal from "~/components/modals/CreateRecordModal";
 import { env } from "~/env.mjs";
 import { api } from "~/utils/api";
+import Record from "~/components/Record";
 
 const PatientPageById: NextPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
@@ -128,7 +129,7 @@ const PatientPageById: NextPage<
               {data.clinicalRecords.map(({ clinicalRecords }) => (
                 <li className="p-4 mx-auto w-full max-w-prose rounded-lg bg-fuchsia-50" key={clinicalRecords?.id}>
                   <blockquote className="whitespace-pre-line break-words">
-                    {clinicalRecords?.message}
+                    <Record content={clinicalRecords?.message} />
                   </blockquote>
 
                   <p className="font-light">
