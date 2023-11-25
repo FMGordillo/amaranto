@@ -101,11 +101,17 @@ export const patientsRouter = createTRPCRouter({
     }),
 
   createPatient: protectedProcedure
-    .input(z.string())
+    .input(z.object({
+      documentType: z.string().optional(),
+      documentValue: z.string(),
+      email: z.string().optional(),
+      name: z.string(),
+      surname: z.string(),
+    }))
     .mutation(({ ctx, input }) => {
       return ctx.db
         .insert(patients)
-        .values({ name: input, doctorId: ctx.session.user.id })
+        .values({ ...input, doctorId: ctx.session.user.id })
         .returning();
     }),
 });

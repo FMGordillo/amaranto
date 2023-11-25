@@ -86,7 +86,7 @@ const CreateRecord = forwardRef<HTMLDivElement, CreateRecordModalProps>(
           as="h3"
           className="text-lg font-medium leading-6 text-gray-900"
         >
-          Create a new clinical record
+          Registrá visita
         </Dialog.Title>
         <div className="mt-2">
           <form
@@ -94,12 +94,12 @@ const CreateRecord = forwardRef<HTMLDivElement, CreateRecordModalProps>(
             aria-disabled={createClinicalRecord.isLoading}
             onSubmit={(e) => void handleSubmit(e)}
           >
-            <div className="mb-4">
+            <div className="my-4">
               <label
                 htmlFor="recordDescription"
                 className="mb-2 block text-sm font-medium text-gray-600"
               >
-                Record Description
+                Description
               </label>
 
               <Editor handleContentChange={setContent} />

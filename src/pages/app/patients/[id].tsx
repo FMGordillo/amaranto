@@ -78,10 +78,13 @@ const PatientPageById: NextPage<
     <Layout>
       <AppLayout>
         <div className="mb-4 flex items-center justify-between">
-          {!isLoading && patient && (
+          {patient && (
+            <>
             <h1 className="text-2xl">
-              Paciente: <span className="font-bold">{patient.name}</span>
+              Paciente: <span className="font-bold">{patient.name} {patient.surname}</span>
             </h1>
+
+            </>
           )}
 
           <button
@@ -91,6 +94,13 @@ const PatientPageById: NextPage<
             Registrar visita
           </button>
         </div>
+
+          {patient && (
+        <div className="mb-4">
+            <p>Documento: {patient.documentType} {patient.documentValue}</p>
+            <p>Correo electrónico: {patient.email}</p>
+        </div>
+          )}
 
         {/*
         <div className="mb-8 flex justify-center">
