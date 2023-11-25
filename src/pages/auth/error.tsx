@@ -1,5 +1,4 @@
-import { FunctionComponent } from "react";
-import Button from "~/components/Button";
+import type { FunctionComponent } from "react";
 
 type ErrorPageParam = "Configuration" | "AccessDenied" | "Verification";
 
@@ -23,7 +22,7 @@ const SignInBtn: FunctionComponent<{ url: string }> = ({ url }) => (
 
 export default function ErrorPage(props: ErrorProps) {
   const { url, error = "default" } = props;
-  const signinPageUrl = `${url}/signin`;
+  const signinPageUrl = url?.hostname ? `${url.hostname}/signin` : "/";
 
   const errors: Record<ErrorPageParam | "default", ErrorView> = {
     default: {
@@ -74,18 +73,15 @@ export default function ErrorPage(props: ErrorProps) {
     },
   };
 
-  const { status, heading, message, signin } = errors[error] ?? errors.default;
+  const { heading, message, signin } = errors[error] ?? errors.default;
 
-  return {
-    status,
-    html: (
-      <div className="error">
-        <div className="card">
-          <h1>{heading}</h1>
-          <div className="message">{message}</div>
-          {signin}
-        </div>
+  return (
+    <div className="error">
+      <div className="card">
+        <h1>{heading}</h1>
+        <div className="message">{message}</div>
+        {signin}
       </div>
-    ),
-  };
+    </div>
+  );
 }

@@ -47,7 +47,7 @@ export default function SignIn({
           .filter((provider) => provider.id !== "email")
           .map((provider) => (
             <div key={provider.name}>
-              <Button onClick={() => signIn(provider.id)}>
+              <Button onClick={() => void signIn(provider.id)}>
                 Iniciá sesión con {provider.name}
               </Button>
             </div>

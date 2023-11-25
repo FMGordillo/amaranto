@@ -38,7 +38,7 @@ const SubscribePage: NextPage<
           window.location.href = data.url;
         }
       } catch (error) {
-        router.replace('/')
+        void router.replace('/')
       } finally {
       }
     };
