@@ -39,7 +39,10 @@ export const patients = sqliteTable("patients", {
     .$defaultFn(() => createId())
     .primaryKey(),
   name: text("name", { length: 256 }).notNull(),
-  // I think we don't need any more info from the patient
+  surname: text("surname", { length: 256 }),
+  documentType: text("document_type"),
+  documentValue: text("document_value"),
+  email: text("email"),
   doctorId: text("doctor_id")
     .references(() => users.id, { onDelete: "restrict" })
     .notNull(),

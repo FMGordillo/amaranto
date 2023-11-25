@@ -8,6 +8,7 @@ import LoadingPatient from "~/components/LoadingPatient";
 import Pagination from "~/components/Pagination";
 import CreateRecordModal from "~/components/modals/CreateRecordModal";
 import { api } from "~/utils/api";
+import dayjs from 'dayjs'
 
 const RecordsPage: NextPage = () => {
   const router = useRouter();
@@ -39,6 +40,9 @@ const RecordsPage: NextPage = () => {
               <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                 Name
               </th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                Fecha de registro
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
@@ -54,8 +58,11 @@ const RecordsPage: NextPage = () => {
                     void router.push(`/app/records/${record.data.id}`)
                   }
                 >
-                  <td className="flex justify-between whitespace-nowrap px-6 py-4 underline-offset-4 transition-all">
-                    {record.patient?.name} - {record.data.createdAt}
+                  <td className="whitespace-nowrap px-6 py-4 underline-offset-4 transition-all">
+                    {record.patient?.name}
+                  </td>
+                  <td className="whitespace-nowrap px-6 py-4 underline-offset-4 transition-all">
+                    {dayjs(record.data.createdAt).format('llll')}
                   </td>
                 </tr>
               ))}

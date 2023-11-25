@@ -18,7 +18,7 @@ const Box: FunctionComponent<PropsWithChildren<{ action: () => void }>> = ({
 }) => {
   return (
     <button
-      className="border bg-fuchsia-100 p-4 shadow transition-all hover:cursor-pointer hover:bg-fuchsia-200 hover:shadow-lg"
+      className="border bg-fuchsia-100 h-16 p-4 shadow transition-all hover:cursor-pointer hover:bg-fuchsia-200 hover:shadow-lg"
       onClick={action}
     >
       <span className="block text-center">{children}</span>

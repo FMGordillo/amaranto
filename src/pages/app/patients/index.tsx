@@ -1,6 +1,5 @@
 import Layout from "~/components/Layout";
 import { api } from "~/utils/api";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import CreatePatientModal from "~/components/modals/CreatePatientModal";
@@ -16,13 +15,6 @@ const Patients = () => {
 
   const patientId = params.get("patientId");
   const page = params.get("page") ?? "1";
-
-  const { status } = useSession({
-    required: true,
-    onUnauthenticated() {
-      void router.replace("/");
-    },
-  });
 
   const [newPatientModal, setNewPatientModal] = useState(false);
   const { refetch, data, isLoading } = api.patients.getPatients.useQuery({
@@ -79,6 +71,7 @@ const Patients = () => {
                   ))}
               </tbody>
             </table>
+
             <Pagination
               visiblePages={data?.visiblePages}
               hasPreviousPage={data?.hasPreviousPage}
