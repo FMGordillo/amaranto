@@ -38,8 +38,18 @@ export default function CreatePatientModal({
       invariant(name, "Complete el nombre por favor");
       const surname = data.get("surname");
       invariant(surname, "Complete el apellido por favor");
+      const documentValue = data.get('identification')
+      invariant(documentValue, "Complete el documento por favor");
+      const email = data.get('email')
+      invariant(documentValue, "Complete el documento por favor");
 
-      void createPatient(name.toString(), {
+      void createPatient({
+        documentType: id?.id,
+        documentValue: documentValue.toString(),
+        email: email?.toString(),
+        name: name.toString(),
+        surname: surname.toString(),
+      }, {
         onSuccess: (data) => {
           void onSubmit(data);
           enqueueSnackbar({
@@ -56,10 +66,12 @@ export default function CreatePatientModal({
         },
       });
     } catch (error) {
-      console.log('hey', error)
+      const typedError = error as Error;
+      const invariantMsg = typedError?.message.includes('Invariant') ? typedError.message.split(':')[1] : null;
+
       enqueueSnackbar({
         variant: "error",
-        message: "Por favor, consulte con el administrador del sistema",
+        message: invariantMsg ?? "Por favor, consulte con el administrador del sistema",
       });
       console.log(error);
     }

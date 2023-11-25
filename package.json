@@ -8,7 +8,7 @@
     "email": "email dev",
     "db": "dotenv drizzle-kit",
     "db:generate": "dotenv drizzle-kit generate:sqlite",
-    "db:migrate": "dotenv -e .env.production tsx migrate.ts",
+    "db:migrate": "dotenv tsx migrate.ts",
     "db:studio": "dotenv drizzle-kit studio",
     "dev": "next dev",
     "lint": "next lint",

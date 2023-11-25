@@ -7,14 +7,13 @@ export interface ErrorProps {
   error?: ErrorPageParam;
 }
 
-interface ErrorView {
-  status: number;
+export type ErrorView = {
   heading: string;
   message: JSX.Element;
   signin?: JSX.Element;
 }
 
-const SignInBtn: FunctionComponent<{ url: string }> = ({ url }) => (
+export const SignInBtn: FunctionComponent<{ url: string }> = ({ url }) => (
   <a className="button" href={url}>
     Iniciá sesión
   </a>
@@ -26,7 +25,6 @@ export default function ErrorPage(props: ErrorProps) {
 
   const errors: Record<ErrorPageParam | "default", ErrorView> = {
     default: {
-      status: 200,
       heading: "Error",
       message: (
         <p>
@@ -37,7 +35,6 @@ export default function ErrorPage(props: ErrorProps) {
       ),
     },
     Configuration: {
-      status: 500,
       heading: "Error del servidor",
       message: (
         <div>
@@ -49,7 +46,6 @@ export default function ErrorPage(props: ErrorProps) {
       ),
     },
     AccessDenied: {
-      status: 403,
       heading: "Acceso denegado",
       message: (
         <div>
@@ -61,7 +57,6 @@ export default function ErrorPage(props: ErrorProps) {
       ),
     },
     Verification: {
-      status: 403,
       heading: "No pudimos iniciar sesión",
       message: (
         <div>
@@ -76,12 +71,13 @@ export default function ErrorPage(props: ErrorProps) {
   const { heading, message, signin } = errors[error] ?? errors.default;
 
   return (
-    <div className="error">
-      <div className="card">
-        <h1>{heading}</h1>
-        <div className="message">{message}</div>
+
+    <main className="flex h-screen items-center justify-center  bg-fuchsia-950">
+      <div className="mx-auto flex max-w-md flex-1 flex-col items-center gap-6 rounded-lg border bg-fuchsia-900 p-8 drop-shadow-lg">
+        <h1 className="mb-4 text-xl text-gray-50">{heading}</h1>
+        <p className="text-gray-50">{message}</p>
         {signin}
       </div>
-    </div>
+    </main>
   );
 }
