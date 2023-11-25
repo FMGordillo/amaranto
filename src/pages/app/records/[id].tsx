@@ -4,6 +4,7 @@ import AppLayout from "~/components/AppLayout";
 import Layout from "~/components/Layout";
 import Record from "~/components/Record";
 import { api } from "~/utils/api";
+import dayjs from "dayjs";
 
 const RecordByIdPage: NextPage = () => {
   const params = useParams();
@@ -27,9 +28,9 @@ const RecordByIdPage: NextPage = () => {
               <Record content={data[0]?.clinicalRecords.message} />
             </blockquote>
 
-            <p className="font-light">
-              Fecha de creación:{" "}
-              {data[0]?.clinicalRecords.createdAt.toLocaleString()}
+            <p className="text-right font-light">
+              <span className="font-normal">Fecha de creación</span><br/>
+              {dayjs(data[0]?.clinicalRecords.createdAt).format('dddd D MMMM, YYYY')}<br/> ({dayjs(data[0]?.clinicalRecords.createdAt).fromNow()})
             </p>
           </section>
         )}

@@ -76,8 +76,8 @@ const ToolbarButton: FunctionComponent<
     disabled={disabled}
     onClick={onClick}
     className={
-      "h-8 w-8 border-slate-700 bg-slate-200 " +
-      (isActive ? "bg-slate-300 font-bold" : "")
+      "h-8 w-8 border-slate-700 bg-slate-200 hover:bg-slate-300 disabled:bg-gray-300" +
+      (isActive ? "bg-slate-400 font-bold" : "")
     }
     title={title}
     type="button"

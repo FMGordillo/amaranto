@@ -9,4 +9,5 @@ export default {
     authToken: env.DATABASE_AUTH_TOKEN,
   },
   tablesFilter: ["amaranto_*"],
+  out: './migrations'
 } satisfies Config;

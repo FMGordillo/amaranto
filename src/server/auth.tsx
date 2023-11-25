@@ -13,6 +13,7 @@ import { SQLiteDrizzleAdapter } from "./drizzleSqliteAdapter";
 import { OAuthConfig } from "next-auth/providers";
 import type { EmailConfig, EmailUserConfig } from "next-auth/providers/email";
 import LoginEmail from "emails";
+import VerifyRequest from "~/pages/auth/verify-request";
 
 const resend = new Resend(env.RESEND_API_KEY);
 
@@ -95,6 +96,11 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   debug: env.NODE_ENV === "development",
+  pages: {
+    error: '/auth/error',
+    signIn: '/auth/sign-in',
+    verifyRequest: '/auth/verify-request',
+  },
   callbacks: {
     session({ session, user }) {
       session.user.id = user.id;

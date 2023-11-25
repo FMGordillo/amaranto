@@ -46,7 +46,15 @@ const AppLayout: FunctionComponent<AppLayoutProps> = ({ children }) => {
       <div className="border" />
 
       <div className="container mx-auto h-full rounded-lg bg-white p-8 shadow">
-        {!isRootAppRoute && <Button className="mb-8" onClick={() => void router.back()} variant="outline">{"<-"} Volver</Button>}
+        {!isRootAppRoute && (
+          <Button
+            className="mb-8"
+            onClick={() => void router.back()}
+            variant="outline"
+          >
+            {"<-"} Volver
+          </Button>
+        )}
         {children}
       </div>
     </div>
