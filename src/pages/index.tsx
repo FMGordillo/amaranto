@@ -126,7 +126,7 @@ export default function Home() {
             <div className="flex flex-col items-center justify-center gap-4 md:flex-row">
               <div className="md:grid-cols[120px-auto-120px] grid max-w-sm gap-8 rounded-lg pb-8 shadow-lg ring-purple-500 transition-all hover:ring md:w-1/3">
                 <div className="flex items-center rounded-lg rounded-b bg-purple-400 py-4 pl-8">
-                  <h2 className="text-2xl font-semibold">Beta cerrada</h2>
+                  <h2 className="text-2xl font-semibold">Esenciales</h2>
                 </div>
                 <div className="px-8">
                   <ul className="mt-4 flex list-inside flex-col gap-2">
